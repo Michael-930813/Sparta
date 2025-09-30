@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>스파르타플릭스</title>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <style>
@@ -36,17 +36,21 @@
             border-radius: 5px;
             padding: 20px;
         }
-        .PostingBox > button {
+
+        .PostingBox>button {
             width: 100%;
         }
-        .form-floating > input {
+
+        .form-floating>input {
             background-color: transparent;
             color: white;
         }
-        .form-floating > label {
+
+        .form-floating>label {
             color: white;
         }
-        .input-group > label {
+
+        .input-group>label {
             background-color: transparent;
             color: white;
         }
@@ -57,9 +61,39 @@
         }
     </style>
     <script>
-        let a = 5;
-        let b = 3;
-        console.log(a+b);
+        $(document).ready(function () {
+            let url = "https://13.209.69.177.nip.io/sparta_api/weather/seoul";
+            fetch(url).then(res => res.json()).then(data => {
+                let temp = data['temp'];
+                $('#temp').text(temp);
+            })
+        })
+
+        function BoxToggle() {
+            $("#postingbox").toggle();
+        }
+        function MakeCard() {
+            let image = $("#imageurl").val();
+            let title = $("#title").val();
+            let star = $("#star").val();
+            let comment = $("#comment").val();
+
+            console.log("Test, ", image, title, star, comment);
+
+            let temp_html = `
+            <div class="col">
+                <div class="card h-100">
+                    <img src="${image}"
+                        class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">${title}</h5>
+                        <p class="card-text">${star}</p>
+                        <p class="card-text">${comment}.</p>
+                    </div>
+                </div>
+            </div>`;
+            $("#cardlist").append(temp_html);
+        }
     </script>
 </head>
 
@@ -78,6 +112,7 @@
                     <li><a href="#" class="nav-link px-2 text-white">시리즈</a></li>
                     <li><a href="#" class="nav-link px-2 text-white">영화</a></li>
                     <li><a href="#" class="nav-link px-2 text-white">내가 찜한 콘텐츠</a></li>
+                    <li><a href="#" class="nav-link px-2 text-white">현재 기온 : <span id = "temp">##.##</span>도</a></li>
                 </ul>
                 <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search"> <input type="search"
                         class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search">
@@ -96,46 +131,46 @@
                     <h1 class="display-5 fw-bold">킹덤</h1>
                     <p class="col-md-8 fs-4">병든 왕을 둘러싸고 흉흉한 소문이 떠돈다. 어둠에 뒤덮인 조선, 기이한 역병에 신음하는 산하. 정체 모를 악에 맞서 백성을 구원할
                         희망은 오직 세자뿐이다.</p>
-                    <button type="button" class="btn btn-outline-light">영화 기록하기</button>
+                    <button onclick="BoxToggle()" type="button" class="btn btn-outline-light">영화 기록하기</button>
                     <button type="button" class="btn btn-outline-light">상세정보</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Box -->
-    <div class="PostingBox">
+    <!-- PostingBox -->
+    <div class="PostingBox" id="postingbox">
         <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <input type="email" class="form-control" id="imageurl" placeholder="name@example.com">
             <label for="floatingInput">영화 이미지 주소</label>
         </div>
         <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <input type="email" class="form-control" id="title" placeholder="name@example.com">
             <label for="floatingInput">영화 제목</label>
         </div>
         <div class="input-group mb-3">
             <label class="input-group-text" for="inputGroupSelect01">별점</label>
-            <select class="form-select" id="inputGroupSelect01">
+            <select class="form-select" id="star">
                 <option selected>별점선택</option>
-                <option value="1">⭐</option>
-                <option value="2">⭐⭐</option>
-                <option value="3">⭐⭐⭐</option>
-                <option value="4">⭐⭐⭐⭐</option>
-                <option value="5">⭐⭐⭐⭐⭐</option>
+                <option value="⭐">⭐</option>
+                <option value="⭐⭐">⭐⭐</option>
+                <option value="⭐⭐⭐">⭐⭐⭐</option>
+                <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
+                <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
             </select>
         </div>
         <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <input type="email" class="form-control" id="comment" placeholder="name@example.com">
             <label for="floatingInput">추천 이유</label>
         </div>
-        <button type="button" class="btn btn-danger">기록하기</button>
+        <button onclick="MakeCard()" type="button" class="btn btn-danger">기록하기</button>
     </div>
 
     <!-- Cards -->
     <div class="Cards">
-        <div class="row row-cols-1 row-cols-md-4 g-4">
+        <div id="cardlist" class="row row-cols-1 row-cols-md-4 g-4">
             <div class="col">
-                <div class="card">
+                <div class="card h-100">
                     <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
                         class="card-img-top" alt="...">
                     <div class="card-body">
@@ -146,7 +181,7 @@
                 </div>
             </div>
             <div class="col">
-                <div class="card">
+                <div class="card h-100">
                     <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
                         class="card-img-top" alt="...">
                     <div class="card-body">
@@ -157,7 +192,7 @@
                 </div>
             </div>
             <div class="col">
-                <div class="card">
+                <div class="card h-100">
                     <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
                         class="card-img-top" alt="...">
                     <div class="card-body">
@@ -168,7 +203,7 @@
                 </div>
             </div>
             <div class="col">
-                <div class="card">
+                <div class="card h-100">
                     <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
                         class="card-img-top" alt="...">
                     <div class="card-body">

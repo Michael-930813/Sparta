@@ -4,20 +4,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <link href="https: //cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    <title>나만의 추억앨범</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-
-    <title>My Album</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
 
@@ -25,8 +16,8 @@
             font-family: 'Gowun Dodum', sans-serif;
         }
 
-        .mytitle {
-            background-color: aquamarine;
+        .Title {
+            background-color: green;
             color: white;
 
             height: 250px;
@@ -42,7 +33,7 @@
             background-size: cover;
         }
 
-        .mytitle > button {
+        .Title>button {
             width: 150px;
             height: 50px;
             background-color: transparent;
@@ -56,12 +47,12 @@
             margin-top: 20px;
         }
 
-        .mycards {
+        .Cards {
             margin: 20px auto 20px auto;
             width: 1200px;
         }
 
-        .mypostingbox {
+        .PostingBox {
             width: 500px;
             margin: 20px auto 20px auto;
             padding: 20px 20px 20px 20px;
@@ -69,7 +60,7 @@
             box-shadow: 0px 0px 3px 0px blue;
         }
 
-        .mybtn {
+        .Button {
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -78,48 +69,83 @@
             margin-top: 10px;
         }
 
-        .mybtn>button {
+        .Button>button {
             margin-right: 10px;
         }
     </style>
+    <script>
+        $(document).ready(function () {
+            let url = "https://13.209.69.177.nip.io/sparta_api/seoulair";
+            fetch(url).then(res => res.json()).then(data => {
+                let mise = data['RealtimeCityAir']['row'][0]['IDEX_NM'];
+                 $("#msg").text(mise);
+            })
+        })
+
+        function OpneClose() {
+            $("#postingbox").toggle();
+        }
+        function MakeCard() {
+            let image = $('#image').val();
+            let title = $('#title').val();
+            let content = $('#content').val();
+            let date = $('#date').val();
+
+            let temp_html = `
+            <div class="col">
+                <div class="card h-100">
+                    <img src="${image}"
+                        class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">${title}</h5>
+                        <p class="card-text">${content}</p>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">${date}</small>
+                    </div>
+                </div>
+            </div>`;
+
+            $('#cardlist').append(temp_html);
+        }
+    </script>
 </head>
 
 <body>
-    <div class="mytitle">
+    <div class="Title">
         <h1>나만의 추억 앨범</h1>
-        <button>추억 저장하기</button>
+        <p>현재 서울의 미세먼지 : <span id = "msg">안좋음</span></p>
+        <button onclick="OpneClose()">추억 저장하기</button>
     </div>
-
-    <div class="mypostingbox">
-
+    <div class="PostingBox" id="postingbox">
         <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <input type="email" class="form-control" id="image" placeholder="name@example.com">
             <label for="floatingInput">앨범 이미지</label>
         </div>
 
         <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <input type="email" class="form-control" id="title" placeholder="name@example.com">
             <label for="floatingInput">앨범 제목</label>
         </div>
 
         <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <input type="email" class="form-control" id="content" placeholder="name@example.com">
+            <label for="floatingInput">앨범 내용</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="date" placeholder="name@example.com">
             <label for="floatingInput">앨범 날짜</label>
         </div>
 
-        <div class="form-floating">
-            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
-            <label for="floatingTextarea">앨범 내용</label>
-        </div>
-
-        <div class="mybtn">
-            <button type="button" class="btn btn-dark">기록하기</button>
+        <div class="Button">
+            <button onclick="MakeCard()" type="button" class="btn btn-dark">기록하기</button>
             <button type="button" class="btn btn-outline-dark">닫기</button>
         </div>
     </div>
 
-    <div class="mycards">
-        <div class="row row-cols-1 row-cols-md-4 g-4">
+    <div class="Cards">
+        <div id="cardlist" class="row row-cols-1 row-cols-md-4 g-4">
             <div class="col">
                 <div class="card h-100">
                     <img src="https://images.unsplash.com/photo-1446768500601-ac47e5ec3719?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1446&q=80"
