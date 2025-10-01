@@ -73,23 +73,67 @@
             margin-right: 10px;
         }
     </style>
-    <script>
-        $(document).ready(function () {
-            let url = "https://13.209.69.177.nip.io/sparta_api/seoulair";
-            fetch(url).then(res => res.json()).then(data => {
-                let mise = data['RealtimeCityAir']['row'][0]['IDEX_NM'];
-                 $("#msg").text(mise);
-            })
-        })
+    <script type="module">
+        // Firebase SDK 라이브러리 가져오기
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-        function OpneClose() {
-            $("#postingbox").toggle();
-        }
-        function MakeCard() {
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7jLFsRJBRll9na1G_R8AQux-2wTGDEBs",
+            authDomain: "sparta-77b34.firebaseapp.com",
+            projectId: "sparta-77b34",
+            storageBucket: "sparta-77b34.firebasestorage.app",
+            messagingSenderId: "964317054763",
+            appId: "1:964317054763:web:9bbe9b28ab530044b4a76e",
+            measurementId: "G-92RCGYQZ9V"
+        };
+
+        // Firebase 인스턴스 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // - 포스팅 기록하기
+        $("#postingbtn").click(async function () {
             let image = $('#image').val();
             let title = $('#title').val();
             let content = $('#content').val();
             let date = $('#date').val();
+
+            let doc = {
+                'image': image,
+                'title': title,
+                'content': content,
+                'date': date
+            }
+            await addDoc(collection(db, "albums"), doc);
+            alert('저장 완료');
+            window.location.reload();
+        })
+        
+        // - 포스팅박스 토글
+        $("#savebtn").click(async function () {
+            $("#postingbox").toggle();
+        })
+
+        // - 페이지 로딩 완료시
+        // - 날씨 정보 불러오기
+        let url = "https://13.209.69.177.nip.io/sparta_api/seoulair";
+        fetch(url).then(res => res.json()).then(data => {
+            let mise = data['RealtimeCityAir']['row'][0]['IDEX_NM'];
+            $("#msg").text(mise);
+        })
+        // - 카드 불러오기
+        let docs = await getDocs(collection(db, "albums"));
+        docs.forEach((doc) => {
+            let row = doc.data();
+
+            let image = row['image'];
+            let title = row['title'];
+            let content = row['content'];
+            let date = row['date'];;
 
             let temp_html = `
             <div class="col">
@@ -107,15 +151,15 @@
             </div>`;
 
             $('#cardlist').append(temp_html);
-        }
+        });
     </script>
 </head>
 
 <body>
     <div class="Title">
         <h1>나만의 추억 앨범</h1>
-        <p>현재 서울의 미세먼지 : <span id = "msg">안좋음</span></p>
-        <button onclick="OpneClose()">추억 저장하기</button>
+        <p>현재 서울의 미세먼지 : <span id="msg">안좋음</span></p>
+        <button id="savebtn">추억 저장하기</button>
     </div>
     <div class="PostingBox" id="postingbox">
         <div class="form-floating mb-3">
@@ -139,7 +183,7 @@
         </div>
 
         <div class="Button">
-            <button onclick="MakeCard()" type="button" class="btn btn-dark">기록하기</button>
+            <button id="postingbtn" type="button" class="btn btn-dark">기록하기</button>
             <button type="button" class="btn btn-outline-dark">닫기</button>
         </div>
     </div>
