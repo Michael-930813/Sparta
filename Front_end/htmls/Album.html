@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>나만의 추억앨범</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+
+        * {
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+
+        .Title {
+            background-color: green;
+            color: white;
+
+            height: 250px;
+
+            /* 내용물을 정렬 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            background-image: url('https://images.unsplash.com/photo-1511992243105-2992b3fd0410?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
+            background-position: center;
+            background-size: cover;
+        }
+
+        .Title > button {
+            width: 150px;
+            height: 50px;
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+
+            border: 1px solid white;
+            margin-top: 20px;
+        }
+
+        .Cards {
+            margin: 20px auto 20px auto;
+            width: 1200px;
+        }
+
+        .PostingBox {
+            width: 500px;
+            margin: 20px auto 20px auto;
+            padding: 20px 20px 20px 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 3px 0px blue;
+        }
+
+        .Button {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            margin-top: 10px;
+        }
+
+        .Button > button {
+            margin-right: 10px;
+        }
+    </style>
+    <script type="module">
+        // Firebase SDK 라이브러리 가져오기
+        import {initializeApp} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import {getFirestore} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import {collection, addDoc} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import {getDocs} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7jLFsRJBRll9na1G_R8AQux-2wTGDEBs",
+            authDomain: "sparta-77b34.firebaseapp.com",
+            projectId: "sparta-77b34",
+            storageBucket: "sparta-77b34.firebasestorage.app",
+            messagingSenderId: "964317054763",
+            appId: "1:964317054763:web:9bbe9b28ab530044b4a76e",
+            measurementId: "G-92RCGYQZ9V"
+        };
+
+        // Firebase 인스턴스 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // - 포스팅 기록하기
+        $("#postingbtn").click(async function () {
+            let image = $('#image').val();
+            let title = $('#title').val();
+            let content = $('#content').val();
+            let date = $('#date').val();
+
+            let doc = {
+                'image': image,
+                'title': title,
+                'content': content,
+                'date': date
+            }
+            await addDoc(collection(db, "albums"), doc);
+            alert('저장 완료');
+            window.location.reload();
+        })
+
+        // - 포스팅박스 토글
+        $("#savebtn").click(async function () {
+            $("#postingbox").toggle();
+        })
+
+        // - 페이지 로딩 완료시
+        // - 날씨 정보 불러오기
+        let url = "https://13.209.69.177.nip.io/sparta_api/seoulair";
+        fetch(url).then(res => res.json()).then(data => {
+            let mise = data['RealtimeCityAir']['row'][0]['IDEX_NM'];
+            $("#msg").text(mise);
+        })
+        // - 카드 불러오기
+        let docs = await getDocs(collection(db, "albums"));
+        docs.forEach((doc) => {
+            let row = doc.data();
+
+            let image = row['image'];
+            let title = row['title'];
+            let content = row['content'];
+            let date = row['date'];
+            ;
+
+            let temp_html = `
+            <div class="col">
+                <div class="card h-100">
+                    <img src="${image}"
+                        class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">${title}</h5>
+                        <p class="card-text">${content}</p>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">${date}</small>
+                    </div>
+                </div>
+            </div>`;
+
+            $('#cardlist').append(temp_html);
+        });
+    </script>
+</head>
+
+<body>
+<div class="Title">
+    <h1>나만의 추억 앨범</h1>
+    <p>현재 서울의 미세먼지 : <span id="msg">안좋음</span></p>
+    <button id="savebtn">추억 저장하기</button>
+</div>
+<div class="PostingBox" id="postingbox">
+    <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="image" placeholder="name@example.com">
+        <label for="floatingInput">앨범 이미지</label>
+    </div>
+
+    <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="title" placeholder="name@example.com">
+        <label for="floatingInput">앨범 제목</label>
+    </div>
+
+    <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="content" placeholder="name@example.com">
+        <label for="floatingInput">앨범 내용</label>
+    </div>
+
+    <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="date" placeholder="name@example.com">
+        <label for="floatingInput">앨범 날짜</label>
+    </div>
+
+    <div class="Button">
+        <button id="postingbtn" type="button" class="btn btn-dark">기록하기</button>
+        <button type="button" class="btn btn-outline-dark">닫기</button>
+    </div>
+</div>
+
+<div class="Cards">
+    <div id="cardlist" class="row row-cols-1 row-cols-md-4 g-4">
+        <div class="col">
+            <div class="card h-100">
+                <img src="https://images.unsplash.com/photo-1446768500601-ac47e5ec3719?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1446&q=80"
+                     class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">앨범 제목</h5>
+                    <p class="card-text">앨범 내용</p>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">앨범 날짜</small>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="https://images.unsplash.com/photo-1446768500601-ac47e5ec3719?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1446&q=80"
+                     class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">앨범 제목</h5>
+                    <p class="card-text">앨범 내용</p>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">앨범 날짜</small>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="https://images.unsplash.com/photo-1446768500601-ac47e5ec3719?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1446&q=80"
+                     class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">앨범 제목</h5>
+                    <p class="card-text">앨범 내용</p>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">앨범 날짜</small>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="https://images.unsplash.com/photo-1446768500601-ac47e5ec3719?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1446&q=80"
+                     class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">앨범 제목</h5>
+                    <p class="card-text">앨범 내용</p>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">앨범 날짜</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+</html>

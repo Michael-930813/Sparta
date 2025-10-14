@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Fetch 시작하기</title>
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function hey() {
+            let url = 'https://13.209.69.177.nip.io/sparta_api/seoulair';
+            fetch(url).then(res => res.json()).then(data => {
+                let rows = data['RealtimeCityAir']['row'];
+
+                rows.forEach(e => {
+                    let gu_name = e['MSRSTE_NM'];
+                    let gu_mise = e['IDEX_MVL'];
+                    console.log(gu_name, gu_mise);
+                });
+            })
+        }
+    </script>
+</head>
+
+<body>
+<button onclick="hey()">fetch 연습!</button>
+</body>
+
+</html>
