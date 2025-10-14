@@ -1,18 +1,19 @@
-### IntelliJ IDEA ###
+### IntelliJ / JetBrains
 .idea/
 *.iml
 out/
 *.ipr
 *.iws
-
-# IntelliJ workspace files (개인 환경)
+# (개인 세션/캐시성)
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/dictionaries
 .idea/httpRequests/
 .idea/shelf/
+.idea/inspectionProfiles/
+.idea/sonarlint/
 
-### Java ###
+### Java / Build outputs
 *.class
 *.jar
 *.war
@@ -22,50 +23,37 @@ target/
 **/out/
 **/build/
 
-### Python ###
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.egg-info/
-*.egg
-.env
-venv/
-.venv/
+### Kotlin
+.kotlin/
 
-### Front-end / Web ###
+### Front-end (옵션: 나중 대비)
 node_modules/
 dist/
-build/
 .cache/
 .temp/
-*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 package-lock.json
 yarn.lock
 
-### OS ###
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
+### Python (옵션)
+__pycache__/
+*.pyc
+.venv/
+venv/
 
-# Windows
+### VS Code
+.vscode/
+
+### OS
+.DS_Store
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 
-# Linux
-.Trash-*
-
-### IDE ###
-.vscode/
-.idea/
-*.iml
-
-### 기타 ###
+### Misc
+*.log
 *.tmp
 *.temp
 *.pid
@@ -73,3 +61,5 @@ Desktop.ini
 *.swp
 *.old
 *.orig
+.env
+.env.*
