@@ -18,10 +18,10 @@ public class Main {
         while(true) {
             System.out.print("첫번째 숫자를 입력하세요(0 ~ 1억) : ");
             num0 = input.nextLong();
-            if(isUnderZero(num0) || isOvermax(num0)) { continue; }
+            if(isUnderZero(num0) || isOverMax(num0)) { continue; }
             System.out.print("두번째 숫자를 입력하세요(0 ~ 1억) : ");
             num1 = input.nextLong();
-            if(isUnderZero(num1) || isOvermax(num1)) { continue; }
+            if(isUnderZero(num1) || isOverMax(num1)) { continue; }
             System.out.print("연산할 기호를 입력하세요(+,-,*,/) : ");
             symbol = input.next().charAt(0);
             switch(symbol) {
@@ -66,7 +66,7 @@ public class Main {
             return false;
         }
     }
-    static boolean isOvermax(long num)
+    static boolean isOverMax(long num)
     {
         if( num > (long)1_00_000_000L ) {
             outputWrong();
