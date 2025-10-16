@@ -68,7 +68,7 @@ public class App {
     }
     static boolean isOverMax(long num)
     {
-        if( num > (long)1_00_000_000L ) {
+        if( num > (long)100_000_000L ) {
             outputWrong();
             return true;
         }

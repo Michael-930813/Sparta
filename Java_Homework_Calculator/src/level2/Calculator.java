@@ -1,44 +1,39 @@
 package level2;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Calculator {
 // - Variable
-    private Long result = 0L;
+    private Long result;
+
 
 // - Function
+    // - Structor : Initialize
+    public Calculator() {
+        result = 0L;
+    }
+
     // - Calculate
     public long Calculate(long num0, long num1, char operator) {
         switch(operator) {
             case '+':
-                result = num0 + num1;
+                this.result = num0 + num1;
                 break;
             case '-':
-                result = num0 - num1;
+                this.result = num0 - num1;
                 break;
             case '*':
-                result = num0 * num1;
+                this.result = num0 * num1;
                 break;
             case '/':
                 if( num1 == 0 ) {
                     System.out.println("0으로 나눌 수 없습니다.");
-                    outputWrong();
-                    break;
+                    return -1;
                 }
-                result = num0 / num1;
+                this.result = num0 / num1;
                 break;
             default:
-                outputWrong();
-                break;
+                return -1;
         }
 
         return result;
-    }
-
-    // - Output WrongInput
-    static void outputWrong()
-    {
-        System.out.println("잘못 입력하셨습니다. 처음부터 다시 입력해주세요.");
     }
 }
