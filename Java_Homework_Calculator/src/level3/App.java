@@ -1,20 +1,19 @@
-package level2;
+package level3;
 
-// - Level2 : 클래스를 적용해 기본적인 연산을 수행할 수 있는 계산기 만들기
-// - Step1 : 사칙연산을 수행 후, 결과값 반환 메서드 구현 & 연산 결과를 저장하는 컬렉션 타입 필드를 가진 Clculator 클래스 생성
-// - Step2 : Lv1에서 구현한 App 클래스의 main 메서드에 Calculator 클래스가 활용될 수 있도록 수정
-// - Step3 : App 클래스의 main 메서드에서 Calculator 클래스의 연산 결과를 저장하고 있는 컬렉션 필드에 직접 접근하지 못하도록 수정(캡슐화)
-// - Step4 : Calculator 클래스에 저장된 연산 결과들 중 가장 먼저 저장된 데이터를 삭제하는 기능을 가진 메서드를 구현한 후 App 클래스의 main 메서드에 삭제 메서드가 활용될 수 있도록 수정
+// - Level3 : Enum, Generic, Lambda & Stream을 이해한 계산기 만들기
+// - Step1 : Enum 타입을 활용하여 연산자 타입에 대한 정보를 관리하고 이를 사칙연산 계산기 ArithmeticCalculator 클래스에 활용 해봅니다.
+// - Step2 : 실수, 즉 double 타입의 값을 전달 받아도 연산이 수행하도록 만들기 - 피연산자를 여러 타입으로 받을 수 있도록 기능을 확장
+// - Step3 : 저장된 연산 결과들 중 Scanner로 입력받은 값보다 큰 결과값 들을 출력
 
 import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) {
-        Calculator calc = new Calculator();
+        ArithmeticCalcualtor calc = new ArithmeticCalcualtor();
         Scanner input = new Scanner(System.in);
         Integer num0 = 0, num1 = 0;
-        Long result = 0L;
-        Character operator = ' ';
+        Long prevresult = 0L, nowresult = 0L;
+        Character inputop = ' ';
 
         // - Run Calculator
         System.out.println("=== Calculator On ===");
@@ -31,24 +30,25 @@ public class App {
                 continue;
             }
             System.out.print("Input Operator(+,-,*,/) : ");
-            operator = input.next().charAt(0);
+            inputop = input.next().charAt(0);
+            Operator op = Operator.fromChar(inputop);
 
             // - Calculate
             calc.setNum0(num0);
             calc.setNum1(num1);
-            calc.setOperator(operator);
-            long prev = calc.popFirstResult();
+            calc.setOperator(op);
+
+            prevresult = calc.getLastResult();
             if( calc.Calculate() ) {
-                result = calc.getLastResult();
-            }
-            else {
+                nowresult = calc.getLastResult();
+            } else {
                 outputWrong();
                 continue;
             }
 
             // - Output Result & Check Continue
-            System.out.println("이전 계산 결과 : " + prev);
-            System.out.println("이번 계산 결과 : " + result);
+            System.out.println("이전 계산 결과 : " + prevresult);
+            System.out.println("이번 계산 결과 : " + nowresult);
             System.out.println("계속하시겠습니까?(종료 키워드 : exit)");
             System.out.print("글자를 입력하세요 : ");
             String continues = input.next();
