@@ -37,6 +37,7 @@ public class App {
             calc.setNum0(num0);
             calc.setNum1(num1);
             calc.setOperator(operator);
+            long prev = calc.popFirstResult();
             if( calc.Calculate() ) {
                 result = calc.getLastResult();
             }
@@ -46,7 +47,8 @@ public class App {
             }
 
             // - Output Result & Check Continue
-            System.out.println("계산 결과 : " + result);
+            System.out.println("이전 계산 결과 : " + prev);
+            System.out.println("이번 계산 결과 : " + result);
             System.out.println("계속하시겠습니까?(종료 키워드 : exit)");
             System.out.print("글자를 입력하세요 : ");
             String continues = input.next();
@@ -67,7 +69,6 @@ public class App {
             return false;
         }
     }
-
     private static boolean isOverMax(long num) {
         if (num > (long) 1_000_000_000L) {
             outputWrong();
