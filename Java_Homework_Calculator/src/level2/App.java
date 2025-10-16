@@ -12,11 +12,12 @@ public class App {
     public static void main(String[] args) {
         Calculator calc = new Calculator();
         Scanner input = new Scanner(System.in);
-        Integer num0 = 0, num1 = 0, result = 0;
+        Integer num0 = 0, num1 = 0;
+        Long result = 0L;
         Character operator = ' ';
 
         // - Run Calculator
-        System.out.print("=== Calculator On ===");
+        System.out.println("=== Calculator On ===");
         while (true) {
             // - Input Formula
             System.out.print("Input FirstNumber(0 ~ 1,000,000,000) : ");
@@ -33,8 +34,13 @@ public class App {
             operator = input.next().charAt(0);
 
             // - Calculate
-            result = (int) calc.Calculate(num0.longValue(), num1.longValue(), operator);
-            if (result == -1) {
+            calc.setNum0(num0);
+            calc.setNum1(num1);
+            calc.setOperator(operator);
+            if( calc.Calculate() ) {
+                result = calc.getLastResult();
+            }
+            else {
                 outputWrong();
                 continue;
             }
@@ -48,6 +54,8 @@ public class App {
                 break;
             }
         }
+
+        System.out.println("=== Calculator OFF ===");
     }
 
     // - Check InputNumber
