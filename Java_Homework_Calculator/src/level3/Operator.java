@@ -17,7 +17,7 @@ public enum Operator {
         this.symbol = symbol;
     }
     // - get & set
-    public Character getSymbol() { return symbol; }
+    public char getSymbol() { return symbol; }
 
     // - Char -> Enum
     public static Operator fromChar(char c) {
