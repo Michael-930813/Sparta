@@ -8,78 +8,84 @@ package level3;
 import java.util.Scanner;
 
 public class App {
+    private static final long INPUT_MIN = -100_000_000L;
+    private static final long INPUT_MAX = 100_000_000L;
+
     public static void main(String[] args) {
-        ArithmeticCalcualtor calc = new ArithmeticCalcualtor();
         Scanner input = new Scanner(System.in);
-        Integer num0 = 0, num1 = 0;
-        Long prevresult = 0L, nowresult = 0L;
-        Character inputop = ' ';
+        ArithmeticCalculator<Number> calc = new ArithmeticCalculator<>();
 
         // - Run Calculator
         System.out.println("=== Calculator On ===");
         while (true) {
             // - Input Formula
-            System.out.print("Input FirstNumber(0 ~ 1,000,000,000) : ");
-            num0 = input.nextInt();
-            if (isUnderZero(num0) || isOverMax(num0)) {
-                continue;
-            }
-            System.out.print("Input SecondNumber(0 ~ 1,000,000,000) : ");
-            num1 = input.nextInt();
-            if (isUnderZero(num1) || isOverMax(num1)) {
-                continue;
-            }
+            System.out.print("Input FirstNumber(" + INPUT_MIN + " ~ " + INPUT_MAX + ") : ");
+            String input0 = input.next();
+            if( !isNumeric(input0) ) { outputWrong(); continue; }
+            System.out.print("Input SecondNumber(" + INPUT_MIN + " ~ " + INPUT_MAX + ") : ");
+            String input1 = input.next();
+            if( !isNumeric(input1) ) { outputWrong(); continue; }
+
+            double num0 = Double.parseDouble(input0);
+            double num1 = Double.parseDouble(input1);
+            if( outOfRange(num0) || outOfRange(num1)) { outputWrong(); continue; }
+
             System.out.print("Input Operator(+,-,*,/) : ");
-            inputop = input.next().charAt(0);
+            char inputop = input.next().charAt(0);
             Operator op = Operator.fromChar(inputop);
+            if( op == null ) { outputWrong(); continue; }
 
             // - Calculate
             calc.setNum0(num0);
             calc.setNum1(num1);
             calc.setOperator(op);
 
-            prevresult = calc.getLastResult();
-            if( calc.Calculate() ) {
-                nowresult = calc.getLastResult();
-            } else {
-                outputWrong();
-                continue;
-            }
+            double prev = calc.getLastResult();
+            if(!calc.Calculate()) { outputWrong(); continue; }
+            double now = calc.getLastResult();
 
-            // - Output Result & Check Continue
-            System.out.println("이전 계산 결과 : " + prevresult);
-            System.out.println("이번 계산 결과 : " + nowresult);
-            System.out.println("계속하시겠습니까?(종료 키워드 : exit)");
-            System.out.print("글자를 입력하세요 : ");
+            // - Output Result
+            System.out.println("Previous Calculate Result : " + formatNumber(prev));
+            System.out.println("Current Calculate Result : " + formatNumber(now));
+
+            // - Check Continue
+            System.out.println("Continue?(Program OFF Keyword : exit)");
+            System.out.print("Input Any Keyword : ");
             String continues = input.next();
-            if (continues.equals("exit")) {
-                break;
-            }
+            if( continues.equalsIgnoreCase("exit")) break;
         }
-
         System.out.println("=== Calculator OFF ===");
     }
 
-    // - Check InputNumber
-    private static boolean isUnderZero(long num) {
-        if (num < 0) {
-            outputWrong();
+    // - Utility
+    // - Check InputNumber( Long || Double )
+    private static boolean isNumeric(String s) {
+        if( s == null || s.isEmpty() ) return false;
+
+        try {
+            Double.parseDouble(s);
             return true;
-        } else {
-            return false;
-        }
-    }
-    private static boolean isOverMax(long num) {
-        if (num > (long) 1_000_000_000L) {
-            outputWrong();
-            return true;
-        } else {
+        } catch (NumberFormatException e) {
             return false;
         }
     }
 
+    // - Check InputNumber OutOfRange
+    private static boolean outOfRange(double num) {
+        return (num < (double)INPUT_MIN || num > (double)INPUT_MAX);
+    }
+
     // - Output WrongInput
-    public static void outputWrong() {
-        System.out.println("잘못 입력하셨습니다. 처음부터 다시 입력해주세요.");
+    private static void outputWrong() {
+        System.out.println("Wrong Input. Please try again.");
+    }
+
+    // - Output Long from Double
+    private static String formatNumber(double num) {
+        if( num == Math.floor(num)) {
+            return String.valueOf((long)num);
+        } else {
+            return String.valueOf(num);
+        }
     }
 }
