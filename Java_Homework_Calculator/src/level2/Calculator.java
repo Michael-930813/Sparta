@@ -5,12 +5,11 @@ import java.util.List;
 
 public class Calculator {
 // - Variable
+    private Long result = 0L;
 
 // - Function
     // - Calculate
     public long Calculate(long num0, long num1, char operator) {
-        long result = 0;
-
         switch(operator) {
             case '+':
                 result = num0 + num1;
@@ -30,6 +29,7 @@ public class Calculator {
                 result = num0 / num1;
                 break;
             default:
+                outputWrong();
                 break;
         }
 
