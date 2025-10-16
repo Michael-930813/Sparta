@@ -3,12 +3,12 @@ package level1;
 import java.util.Scanner;
 
 // - Level1 : 클래스 없이 기본적인 연산을 수행할 수 있는 계산기 만들기
-// - 0을 포함한 양의 정수 입력 받기
-// - 사칙연산 기호를 입력받기
-// - 위에서 입력받은 양의 정수 2개와 사칙연산 기호를 사용하여 연산을 진행한 후 결과값을 출력하기
-// - 반복문을 사용하되, 반복의 종료를 알려주는 "exit"문자열을 입력하기 전까지 무한으로 계산을 진행할 수 있도록 소스를 수정하기
+// - Step1 : 0을 포함한 양의 정수 입력 받기
+// - Step2 : 사칙연산 기호를 입력받기
+// - Step3 : 위에서 입력받은 양의 정수 2개와 사칙연산 기호를 사용하여 연산을 진행한 후 결과값을 출력하기
+// - Step4 : 반복문을 사용하되, 반복의 종료를 알려주는 "exit"문자열을 입력하기 전까지 무한으로 계산을 진행할 수 있도록 소스를 수정하기
 
-public class Main {
+public class App {
     public static void main(String[] args) {
         long num0 = 0, num1 = 0;
         long sum = 0;
@@ -18,10 +18,10 @@ public class Main {
         while(true) {
             System.out.print("첫번째 숫자를 입력하세요(0 ~ 1억) : ");
             num0 = input.nextLong();
-            if(isUnderZero(num0) || isOvermax(num0)) { continue; }
+            if(isUnderZero(num0) || isOverMax(num0)) { continue; }
             System.out.print("두번째 숫자를 입력하세요(0 ~ 1억) : ");
             num1 = input.nextLong();
-            if(isUnderZero(num1) || isOvermax(num1)) { continue; }
+            if(isUnderZero(num1) || isOverMax(num1)) { continue; }
             System.out.print("연산할 기호를 입력하세요(+,-,*,/) : ");
             symbol = input.next().charAt(0);
             switch(symbol) {
@@ -66,7 +66,7 @@ public class Main {
             return false;
         }
     }
-    static boolean isOvermax(long num)
+    static boolean isOverMax(long num)
     {
         if( num > (long)1_00_000_000L ) {
             outputWrong();
