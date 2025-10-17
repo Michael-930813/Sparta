@@ -21,11 +21,11 @@ public class App {
             // - Input Formula
             System.out.print("Input FirstNumber(" + INPUT_MIN + " ~ " + INPUT_MAX + ") : ");
             String input0 = input.next();
-            if( !isNumeric(input0) ) { outputWrong(); continue; }
             System.out.print("Input SecondNumber(" + INPUT_MIN + " ~ " + INPUT_MAX + ") : ");
             String input1 = input.next();
-            if( !isNumeric(input1) ) { outputWrong(); continue; }
-
+            // - Check Input value
+            if( !isNumeric(input0) || !isNumeric(input1) ) { outputWrong(); continue; }
+            // - Convert Inputvalue -> double
             double num0 = Double.parseDouble(input0);
             double num1 = Double.parseDouble(input1);
             if( outOfRange(num0) || outOfRange(num1)) { outputWrong(); continue; }
@@ -45,8 +45,20 @@ public class App {
             double now = calc.getLastResult();
 
             // - Output Result
+            System.out.println("--- Calculate Result ---");
             System.out.println("Previous Calculate Result : " + formatNumber(prev));
             System.out.println("Current Calculate Result : " + formatNumber(now));
+
+            // - Lookup ResultValues Greater InputValue
+            System.out.print("Lookup Greater Results - StandardNumber : ");
+            String filter = input.next();
+            System.out.println("--- Bigger Result than InputNumber ---");
+            if( isNumeric(filter) ) {
+                double result = Double.parseDouble(filter);
+                calc.getResultlist().stream()
+                        .filter( r -> r > result )
+                        .forEach( r -> System.out.println("Result : " + formatNumber(r)));
+            }
 
             // - Check Continue
             System.out.println("Continue?(Program OFF Keyword : exit)");
@@ -60,14 +72,9 @@ public class App {
     // - Utility
     // - Check InputNumber( Long || Double )
     private static boolean isNumeric(String s) {
-        if( s == null || s.isEmpty() ) return false;
-
-        try {
-            Double.parseDouble(s);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
+        return s != null &&
+                !s.isEmpty() &&
+                s.chars().allMatch(ch -> Character.isDigit(ch) || ch == '.' || ch == '-' || ch == '+');
     }
 
     // - Check InputNumber OutOfRange
@@ -82,10 +89,6 @@ public class App {
 
     // - Output Long from Double
     private static String formatNumber(double num) {
-        if( num == Math.floor(num)) {
-            return String.valueOf((long)num);
-        } else {
-            return String.valueOf(num);
-        }
+        return (num == Math.floor(num)) ? String.valueOf((long)num) : String.valueOf(num);
     }
 }

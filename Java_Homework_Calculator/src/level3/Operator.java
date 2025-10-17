@@ -1,5 +1,7 @@
 package level3;
 
+import java.util.Arrays;
+
 public enum Operator {
     // - Enumeration
         PLUS('+'),
@@ -21,11 +23,9 @@ public enum Operator {
 
     // - Char -> Enum
     public static Operator fromChar(char c) {
-        for(Operator op : Operator.values()) {
-            if(op.getSymbol() == c) {
-                return op;
-            }
-        }
-        return null;
+        return Arrays.stream(values())
+                .filter(operator -> operator.symbol == c)
+                .findFirst()
+                .orElse(null);
     }
 }

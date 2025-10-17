@@ -25,6 +25,7 @@ public class ArithmeticCalculator<T extends Number> {
     public double popFirstResult() { return removeSafeResult(0); }
     public double getLastResult() { return getSafeResult(resultlist.size() - 1); }
     public double popLastResult() { return removeSafeResult(resultlist.size() - 1); }
+    public List<Double> getResultlist() { return resultlist; }
 
     public void setNum0(T num0) { this.num0 = num0; }
     public void setNum1(T num1) {
@@ -39,57 +40,39 @@ public class ArithmeticCalculator<T extends Number> {
         // - Cast to double
         double x = num0.doubleValue();
         double y = num1.doubleValue();
-        double result = 0;
 
         // - Calculate
-        switch(this.operator) {
-            case PLUS :
-                result = x + y;
-                break;
-            case MINUS :
-                result = x - y;
-                break;
-            case MULTYPLE :
-                result = x * y;
-                break;
-            case DIVIDE :
+        double result = switch (operator) {
+            case PLUS -> x + y;
+            case MINUS -> x - y;
+            case MULTYPLE ->  x * y;
+            case DIVIDE ->  {
                 if( y == 0 ) {
                     System.out.println("0으로 나눌 수 없습니다.");
-                    return false;
+                    yield Double.NaN;
                 }
-                result = x / y;
-                break;
-            default:
-                return false;
-        }
+                yield x / y;
+            }
+        };
 
+        // - Nan is false
+        if(Double.isNaN(result)) return false;
         // - Add Resultlist
         resultlist.add(result);
-
         return true;
     }
 
     // - get & remove SafeValue in ResultList
     private double getSafeResult(int index) {
-        // - Check List is null
-        Optional<List<Double>> optionallist = Optional.ofNullable(resultlist);
-        if( !optionallist.isPresent() ) { return 0L; }
-        // - Check index is normal
-        List<Double> safelist = optionallist.get();
-        if( index < 0 || index >= safelist.size() ) { return 0L; }
-        // - Check Value in List[index]
-        Double value = safelist.get(index);
-        return (value != null) ? value : 0.0;
+        return Optional.ofNullable(resultlist)
+                .filter(list -> index >= 0 && index < list.size())
+                .map(list -> list.get(index))
+                .orElse(0.0);
     }
     private double removeSafeResult(int index) {
-        // - Check List is null
-        Optional<List<Double>> optionallist = Optional.ofNullable(resultlist);
-        if( !optionallist.isPresent() ) { return 0L; }
-        // - Check index is normal
-        List<Double> safelist = optionallist.get();
-        if( index < 0 || index >= safelist.size() ) { return 0L; }
-        // - Check Value in List[index]
-        Double value = safelist.remove(index);
-        return (value != null) ? value : 0.0;
+        return Optional.ofNullable(resultlist)
+                .filter( list -> index >= 0 && index < list.size())
+                .map( list -> list.remove(index))
+                .orElse(0.0);
     }
 }
