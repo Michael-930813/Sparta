@@ -1,21 +1,17 @@
-/*
-package org.example.advance;
+package org.example.plus;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.example.advance.common.entity.Comment;
-import org.example.advance.common.entity.Post;
-import org.example.advance.common.entity.User;
-import org.example.advance.common.enums.UserRoleEnum;
-import org.example.advance.domain.comment.repository.CommentRepository;
-import org.example.advance.domain.comment.service.CommentService;
-import org.example.advance.domain.post.repository.PostRepository;
-import org.example.advance.domain.post.service.PostService;
-import org.example.advance.domain.user.repository.UserRepository;
-import org.example.advance.domain.user.service.UserService;
-import org.springframework.security.core.parameters.P;
+
+import org.example.plus.common.entity.Comment;
+import org.example.plus.common.entity.Post;
+import org.example.plus.common.entity.User;
+import org.example.plus.common.enums.UserRoleEnum;
+import org.example.plus.domain.comment.repository.CommentRepository;
+import org.example.plus.domain.post.repository.PostRepository;
+import org.example.plus.domain.user.repository.UserRepository;
+import org.example.plus.domain.user.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -89,4 +85,3 @@ public class InitData {
 
     }
 }
-*/
