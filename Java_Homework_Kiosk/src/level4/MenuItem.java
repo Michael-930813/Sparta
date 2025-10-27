@@ -1,4 +1,4 @@
- package level3;
+package level4;
 
 public class MenuItem {
 // - Variable
@@ -18,5 +18,10 @@ public class MenuItem {
         this.name = name;
         this.price = price;
         this.description = description;
+    }
+
+    // - OutputMenuItem
+    public void outputMenuitem() {
+        System.out.println(name + "\t | W " + price + " | " + description);
     }
 }
