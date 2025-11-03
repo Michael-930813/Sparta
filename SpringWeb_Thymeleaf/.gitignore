@@ -1,30 +1,33 @@
-HELP.md
-.gradle
+### Gradle ###
+.gradle/
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
+gradle-app.setting
+.gradle-cache/
+.gradle-test-kit/
 
 ### IntelliJ IDEA ###
-.idea
-*.iws
+.idea/
 *.iml
+*.iws
 *.ipr
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+
+### STS / Eclipse ###
+.apt_generated/
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
 
 ### NetBeans ###
 /nbproject/private/
@@ -35,3 +38,35 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Logs / Reports ###
+*.log
+*.tmp
+*.err
+*.out
+hs_err_pid*
+
+### OS ###
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+### Environment / Secrets ###
+.env
+.env.*
+*.local
+
+### Kotlin ###
+.kotlin/
+*.kts~
+
+### Optional: ignore test folder (if you don’t want to upload test sources)
+# /src/test/
+
+### Backup / Misc ###
+*.bak
+*.swp
+*.old
+*.orig
+*.pid
