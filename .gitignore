@@ -26,6 +26,25 @@ target/
 ### Kotlin
 .kotlin/
 
+### Spring Boot / Gradle
+.gradle/
+.gradle-cache/
+.gradle-test-kit/
+gradle-app.setting
+!gradle/wrapper/gradle-wrapper.jar   # wrapper jar은 예외
+!**/src/main/**/build/
+!**/src/test/**/build/
+# 로그, 임시 리포트, PID 등
+*.log
+*.tmp
+*.err
+*.out
+hs_err_pid*
+replay_pid*
+
+### Test (선택적으로 무시)
+/src/test/
+
 ### Front-end (옵션: 나중 대비)
 node_modules/
 dist/
@@ -36,30 +55,3 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 yarn.lock
-
-### Python (옵션)
-__pycache__/
-*.pyc
-.venv/
-venv/
-
-### VS Code
-.vscode/
-
-### OS
-.DS_Store
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-### Misc
-*.log
-*.tmp
-*.temp
-*.pid
-*.bak
-*.swp
-*.old
-*.orig
-.env
-.env.*
