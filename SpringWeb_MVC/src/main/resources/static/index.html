@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOVIES</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect fill='%23141414' width='32' height='32' rx='4'/><text x='50%25' y='50%25' text-anchor='middle' dy='.35em' fill='%23e50914' font-family='Arial' font-weight='bold' font-size='20'>M</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #141414;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(180deg, rgba(20,20,20,1) 0%, rgba(20,20,20,0) 100%);
+            padding: 20px 4%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, #e50914, #ff0000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 4% 40px;
+        }
+
+        /* Add Movie Section */
+        .add-section {
+            background: linear-gradient(135deg, rgba(229,9,20,0.1) 0%, rgba(0,0,0,0.3) 100%);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 50px;
+            border: 1px solid rgba(229,9,20,0.2);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #999;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #e50914;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .btn-add {
+            background: #e50914;
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-add:hover {
+            background: #f40612;
+            transform: translateY(-1px);
+        }
+
+        .btn-add:active {
+            transform: translateY(0);
+        }
+
+        /* Movies Section */
+        .movies-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .movies-title {
+            font-size: 1.8rem;
+            font-weight: 500;
+        }
+
+        .movie-count {
+            color: #808080;
+            font-size: 0.95rem;
+        }
+
+        /* Movie Grid */
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        /* Movie Card */
+        .movie-card {
+            position: relative;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #1a1a1a;
+            transition: transform 0.2s;
+            cursor: pointer;
+            aspect-ratio: 2/3;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .movie-card:hover .movie-overlay {
+            opacity: 1;
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .movie-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);
+            padding: 20px 15px 15px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .movie-title-card {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .btn-delete {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-delete:hover {
+            background: rgba(229, 9, 20, 0.8);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            grid-column: 1/-1;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        .empty-text {
+            color: #808080;
+            font-size: 1.1rem;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            grid-column: 1/-1;
+        }
+
+        .spinner {
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top: 2px solid #e50914;
+            width: 40px;
+            height: 40px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Modal */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: #1f1f1f;
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 400px;
+            width: 90%;
+            transform: scale(0.9);
+            transition: transform 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-backdrop.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .modal-body {
+            color: #b3b3b3;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-btn-cancel {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .modal-btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .modal-btn-confirm {
+            background: #e50914;
+            color: white;
+        }
+
+        .modal-btn-confirm:hover {
+            background: #f40612;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1f1f1f;
+            color: #fff;
+            padding: 16px 20px;
+            border-radius: 8px;
+            min-width: 250px;
+            z-index: 2000;
+            animation: slideIn 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+        }
+
+        .toast.success {
+            border-left: 3px solid #46d369;
+        }
+
+        .toast.error {
+            border-left: 3px solid #e50914;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+
+            .btn-add {
+                width: 100%;
+            }
+
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">MOVIES</div>
+    </div>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- Add Movie -->
+        <div class="add-section">
+            <h2 class="section-title">새 영화 추가</h2>
+            <form id="movieForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="title">제목</label>
+                        <input type="text" id="title" name="title" placeholder="영화 제목 입력" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="imageUrl">포스터 URL</label>
+                        <input type="text" id="imageUrl" name="imageUrl" placeholder="이미지 URL (선택)">
+                    </div>
+                    <button type="submit" class="btn-add">추가</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Movies -->
+        <div class="movies-section">
+            <div class="movies-header">
+                <h2 class="movies-title">영화 컬렉션</h2>
+                <span class="movie-count" id="movieCount"></span>
+            </div>
+            <div id="moviesList" class="movies-grid">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <div>불러오는 중...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modalBackdrop" class="modal-backdrop">
+        <div class="modal">
+            <div class="modal-title" id="modalTitle"></div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-cancel" onclick="closeModal()">취소</button>
+                <button class="modal-btn modal-btn-confirm" id="modalConfirm">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default movie poster SVG
+        const defaultPosterSVG = `data:image/svg+xml;base64,${btoa(`
+            <svg width="300" height="450" viewBox="0 0 300 450" xmlns="http://www.w3.org/2000/svg">
+                <rect width="300" height="450" fill="#1a1a1a"/>
+                <rect x="10" y="10" width="280" height="430" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="10,5" rx="8"/>
+                <g transform="translate(150, 200)">
+                    <circle cx="0" cy="0" r="50" fill="none" stroke="#404040" stroke-width="3"/>
+                    <path d="M -30 -15 L -30 15 L -10 0 Z" fill="#404040"/>
+                    <rect x="-35" y="-25" width="70" height="50" fill="none" stroke="#404040" stroke-width="3" rx="4"/>
+                </g>
+                <text x="150" y="280" text-anchor="middle" fill="#666" font-family="Arial, sans-serif" font-size="16" font-weight="500">NO POSTER</text>
+                <text x="150" y="305" text-anchor="middle" fill="#444" font-family="Arial, sans-serif" font-size="12">Image Not Available</text>
+            </svg>
+        `)}`;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMovies();
+        });
+
+        // Modal functions
+        function showModal(title, body, onConfirm) {
+            const backdrop = document.getElementById('modalBackdrop');
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').textContent = body;
+            
+            const confirmBtn = document.getElementById('modalConfirm');
+            confirmBtn.onclick = () => {
+                closeModal();
+                onConfirm();
+            };
+            
+            backdrop.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modalBackdrop').classList.remove('active');
+        }
+
+        // Toast
+        function showToast(message, type = 'success') {
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) existingToast.remove();
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Add movie
+        document.getElementById('movieForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const movieTitle = formData.get('title');
+            
+            // 중복 체크
+            try {
+                const response = await fetch('/movies');
+                const existingMovies = await response.json();
+                
+                if (existingMovies.some(movie => movie.title === movieTitle)) {
+                    showToast('이미 존재하는 영화입니다', 'error');
+                    return;
+                }
+            } catch (error) {
+                console.error('중복 체크 실패:', error);
+            }
+
+            const movieData = {
+                title: movieTitle,
+                imageUrl: formData.get('imageUrl') || defaultPosterSVG
+            };
+
+            try {
+                const response = await fetch('/movies', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(movieData)
+                });
+
+                if (response.ok) {
+                    showToast(`"${movieData.title}" 추가됨`, 'success');
+                    e.target.reset();
+                    loadMovies();
+                } else {
+                    showToast('추가 실패', 'error');
+                }
+            } catch (error) {
+                showToast('추가 실패', 'error');
+            }
+        });
+
+        // Load movies
+        async function loadMovies() {
+            try {
+                const response = await fetch('/movies');
+                const movies = await response.json();
+
+                const moviesList = document.getElementById('moviesList');
+                const movieCount = document.getElementById('movieCount');
+
+                movieCount.textContent = `${movies.length}개`;
+
+                if (movies.length === 0) {
+                    moviesList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">🎬</div>
+                            <div class="empty-text">영화가 없습니다</div>
+                        </div>
+                    `;
+                } else {
+                    moviesList.innerHTML = movies.map(movie => `
+                        <div class="movie-card">
+                            <img src="${movie.imageUrl || defaultPosterSVG}" 
+                                 alt="${movie.title}" 
+                                 class="movie-poster" 
+                                 onerror="this.src=defaultPosterSVG">
+                            <div class="movie-overlay">
+                                <div class="movie-title-card">${movie.title}</div>
+                                <button class="btn-delete" onclick="confirmDelete('${movie.title.replace(/'/g, "\\'")}')">삭제</button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                document.getElementById('moviesList').innerHTML = 
+                    '<div class="empty-state"><div class="empty-text">로드 실패</div></div>';
+            }
+        }
+
+        // Delete movie
+        function confirmDelete(title) {
+            showModal(
+                '영화 삭제',
+                `"${title}"을(를) 삭제하시겠습니까?`,
+                () => deleteMovie(title)
+            );
+        }
+
+        async function deleteMovie(title) {
+            try {
+                const before = await fetch('/movies');
+                const countBefore = (await before.json()).length;
+
+                await fetch(`/movies/${encodeURIComponent(title)}`, { method: 'DELETE' });
+
+                const after = await fetch('/movies');
+                const countAfter = (await after.json()).length;
+
+                if (countBefore > countAfter) {
+                    showToast('삭제됨', 'success');
+                    loadMovies();
+                } else {
+                    showToast('삭제 실패', 'error');
+                }
+            } catch (error) {
+                showToast('오류 발생', 'error');
+            }
+        }
+
+        // Close modal on backdrop click
+        document.getElementById('modalBackdrop').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+    </script>
+</body>
+</html>
