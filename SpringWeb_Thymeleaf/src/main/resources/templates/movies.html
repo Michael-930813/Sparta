@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:with="
+        m=${#strings.trim(recommendedMovie?:'')},
+        posterUrl=${
+            m=='쇼생크 탈출' ? 'https://github.com/user-attachments/assets/4eea166b-65ef-4360-8ec1-402b70cf8817' :
+            m=='대부' ? 'https://github.com/user-attachments/assets/a1910767-2cf6-485e-8816-9aae3c9f5fc2' :
+            m=='다크 나이트' ? 'https://github.com/user-attachments/assets/dd172069-78e7-4945-b637-4a8ef10df995' :
+            m=='인생은 아름다워' ? 'https://github.com/user-attachments/assets/93ea654a-906b-4516-8d47-91b7a63516cb' :
+            m=='기생충' ? 'https://github.com/user-attachments/assets/cb4d5ded-0442-4fde-92d2-341c0a64bbb5' :
+            m=='타이타닉' ? 'https://github.com/user-attachments/assets/1e67b339-2137-46f3-8642-24ae7a9be114' :
+            m=='아바타' ? 'https://github.com/user-attachments/assets/f30ac710-7103-4fd4-8fd0-010c616e55f4' :
+            m=='어벤져스: 엔드게임' ? 'https://github.com/user-attachments/assets/0afe4084-2db7-4465-bf14-1791e746e3c3' :
+            null
+        }">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${title}">영화 추천</title>
+    <link rel="dns-prefetch" href="https://github.com"/>
+    <link rel="preconnect" href="https://github.com" crossorigin>
+    <link rel="dns-prefetch" href="https://private-user-images.githubusercontent.com"/>
+    <link rel="preconnect" href="https://private-user-images.githubusercontent.com" crossorigin>
+    <link rel="dns-prefetch" href="https://user-images.githubusercontent.com"/>
+    <link rel="preconnect" href="https://user-images.githubusercontent.com" crossorigin>
+    <link rel="preload" as="image" th:if="${posterUrl}" th:href="${posterUrl}">
+    <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f8f9fa;min-height:100vh;display:flex;align-items:center;justify-content:center;color:#2c3e50}.container{max-width:500px;width:90%;background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.08);padding:40px 30px;text-align:center}.title{font-size:1.8em;font-weight:600;margin-bottom:30px;color:#2c3e50}.movie-poster{width:400px;height:600px;margin:0 auto 30px;border-radius:12px;overflow:hidden;box-shadow:0 8px 25px rgba(0,0,0,.15);background:#e9ecef;display:flex;align-items:center;justify-content:center;color:#6c757d;position:relative}.movie-poster img{width:100%;height:100%;object-fit:cover;object-position:center;transition:transform .3s ease}.movie-poster:hover img{transform:scale(1.05)}.recommendation-section{margin-bottom:30px}.recommendation-label{font-size:1.1em;color:#6c757d;margin-bottom:8px}.movie-title{font-size:2em;font-weight:700;color:#2c3e50;margin-bottom:10px}.movie-subtitle{color:#6c757d;font-size:1em}.btn{background:#007bff;color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:1em;font-weight:500;cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s ease}.btn:hover{background:#0056b3;transform:translateY(-1px)}.btn:active{transform:translateY(0)}</style>
+    <script th:inline="javascript">
+        (function(){
+            var current = /*[[${posterUrl}]]*/ null;
+            var urls = [
+                'https://github.com/user-attachments/assets/4eea166b-65ef-4360-8ec1-402b70cf8817',
+                'https://github.com/user-attachments/assets/a1910767-2cf6-485e-8816-9aae3c9f5fc2',
+                'https://github.com/user-attachments/assets/dd172069-78e7-4945-b637-4a8ef10df995',
+                'https://github.com/user-attachments/assets/93ea654a-906b-4516-8d47-91b7a63516cb',
+                'https://github.com/user-attachments/assets/cb4d5ded-0442-4fde-92d2-341c0a64bbb5',
+                'https://github.com/user-attachments/assets/1e67b339-2137-46f3-8642-24ae7a9be114',
+                'https://github.com/user-attachments/assets/f30ac710-7103-4fd4-8fd0-010c616e55f4',
+                'https://github.com/user-attachments/assets/0afe4084-2db7-4465-bf14-1791e746e3c3'
+            ];
+            for (var i=0; i<urls.length; i++) {
+                var u = urls[i];
+                if (!u || u === current) continue;
+                var img = new Image();
+                try { img.referrerPolicy = 'no-referrer'; } catch(e) {}
+                img.decoding = 'async';
+                img.src = u;
+            }
+        })();
+    </script>
+</head>
+<body>
+<div class="container">
+    <h1 class="title" th:text="${title}">🎬 영화 추천 결과</h1>
+
+    <div class="movie-poster">
+        <img
+                th:if="${posterUrl}"
+                th:src="${posterUrl}"
+                th:alt="${recommendedMovie}"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+                referrerpolicy="no-referrer"
+                onerror="this.style.display='none'; this.parentElement.innerHTML='🎬 영화 포스터';"
+        />
+        <span th:unless="${posterUrl}">🎬 영화 포스터</span>
+    </div>
+
+    <div class="recommendation-section">
+        <div class="recommendation-label">🎉 오늘의 추천 영화</div>
+        <div class="movie-title" th:text="${recommendedMovie}">영화 제목</div>
+        <div class="movie-subtitle">좋은 선택이에요! 즐거운 시청 되세요 🍿</div>
+    </div>
+
+    <a th:href="@{/movies}" class="btn">다른 영화 추천받기</a>
+</div>
+</body>
+</html>
