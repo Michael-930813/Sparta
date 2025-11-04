@@ -16,7 +16,7 @@ Scheduler Server
 >   {
 >      "id" : 1,
 >      "title" : "병원 방문",
->      "content" : "4시 고대병원 진료 예약",
+>      "description" : "4시 고대병원 진료 예약",
 >      "writter" : "김재환",
 >      "createtime" :"2025-11-04T14:00:00",
 >      "updated_at": "2025-11-04T14:10:00" 
