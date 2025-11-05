@@ -61,11 +61,14 @@ public class ScheduleService {
     }
     // - Delete
     @Transactional
-    public void delete(Long scheduleId) {
-        boolean existance = scheduleRepository.existsById(scheduleId);
-        if (!existance) {
-            throw new IllegalStateException("존재하지 않는 일정입니다");
+    public void delete(Long scheduleId, String password) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+        );
+        if (!schedule.getPassword().equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
         }
-        scheduleRepository.deleteById(scheduleId);
+
+        scheduleRepository.delete(schedule);
     }
 }
