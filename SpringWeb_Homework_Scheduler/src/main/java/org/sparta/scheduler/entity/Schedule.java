@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.sparta.scheduler.dto.CreateScheduleRequest;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -33,5 +34,11 @@ public class Schedule extends BaseEntity {
         this.description = description;
         this.author = author;
         this.password = password;
+    }
+    public Schedule(CreateScheduleRequest request) {
+        this.title = request.getTitle();
+        this.description = request.getDescription();
+        this.author = request.getAuthor();
+        this.password = request.getPassword();
     }
 }
