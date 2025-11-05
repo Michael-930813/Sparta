@@ -60,4 +60,12 @@ public class ScheduleService {
         return new UpdateScheduleResponse(schedule);
     }
     // - Delete
+    @Transactional
+    public void delete(Long scheduleId) {
+        boolean existance = scheduleRepository.existsById(scheduleId);
+        if (!existance) {
+            throw new IllegalStateException("존재하지 않는 일정입니다");
+        }
+        scheduleRepository.deleteById(scheduleId);
+    }
 }
