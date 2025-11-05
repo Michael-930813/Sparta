@@ -41,4 +41,10 @@ public class Schedule extends BaseEntity {
         this.author = request.getAuthor();
         this.password = request.getPassword();
     }
+
+    // - Update
+    public void update(String title, String author) {
+        this.title = title;
+        this.author = author;
+    }
 }

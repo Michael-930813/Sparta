@@ -35,5 +35,12 @@ public class ScheduleController {
     }
 
     // - Update
+    @PutMapping("/schedules/{scheduleId}")
+    public ResponseEntity<UpdateScheduleResponse> update(
+            @PathVariable Long scheduleId,
+            @RequestBody UpdateScheduleRequest request) {
+        UpdateScheduleResponse result = scheduleService.update(scheduleId, request);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
     // - Delete
 }

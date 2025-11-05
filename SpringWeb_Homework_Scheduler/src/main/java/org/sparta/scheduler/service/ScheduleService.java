@@ -51,5 +51,13 @@ public class ScheduleService {
         return new GetScheduleResponse(schedule);
     }
     // - Update
+    @Transactional
+    public UpdateScheduleResponse update(Long scheduleId, UpdateScheduleRequest request) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+        );
+        schedule.update(request.getTitle(), request.getAuthor());
+        return new UpdateScheduleResponse(schedule);
+    }
     // - Delete
 }

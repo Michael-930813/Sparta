@@ -20,7 +20,6 @@ public class BaseEntity {
     private LocalDateTime createdAt;
     // - ModifiedTime
     @LastModifiedDate
-    @Column(updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedAt;
 }
