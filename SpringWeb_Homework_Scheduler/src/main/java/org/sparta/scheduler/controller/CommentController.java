@@ -1,5 +1,6 @@
 package org.sparta.scheduler.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.sparta.scheduler.dto.*;
 import org.sparta.scheduler.service.CommentService;
@@ -18,7 +19,7 @@ public class CommentController {
 // - Moethod
     // - Create
     @PostMapping("/schedules/{scheduleId}/comments")
-    public ResponseEntity<CreateCommentResponse> create(@PathVariable Long scheduleId, @RequestBody CreateCommentRequest request) {
+    public ResponseEntity<CreateCommentResponse> create(@PathVariable Long scheduleId, @Valid @RequestBody CreateCommentRequest request) {
         CreateCommentResponse result = commentService.save(scheduleId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }

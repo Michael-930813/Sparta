@@ -1,5 +1,6 @@
 package org.sparta.scheduler.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.sparta.scheduler.dto.*;
 import org.sparta.scheduler.service.ScheduleService;
@@ -17,7 +18,7 @@ public class ScheduleController {
 
     // - Create
     @PostMapping("/schedules")
-    public ResponseEntity<CreateScheduleResponse> create(@RequestBody CreateScheduleRequest request) {
+    public ResponseEntity<CreateScheduleResponse> create(@Valid @RequestBody CreateScheduleRequest request) {
         CreateScheduleResponse result = scheduleService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
@@ -38,7 +39,7 @@ public class ScheduleController {
     @PutMapping("/schedules/{scheduleId}")
     public ResponseEntity<UpdateScheduleResponse> update(
             @PathVariable Long scheduleId,
-            @RequestBody UpdateScheduleRequest request) {
+            @Valid @RequestBody UpdateScheduleRequest request) {
         UpdateScheduleResponse result = scheduleService.update(scheduleId, request);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
@@ -46,7 +47,7 @@ public class ScheduleController {
     @DeleteMapping("/schedules/{scheduleId}")
     public String delete(
             @PathVariable Long scheduleId,
-            @RequestBody DeleteScheduleRequest request
+            @Valid @RequestBody DeleteScheduleRequest request
     ) {
         scheduleService.delete(scheduleId, request.getPassword());
         return "일정이 성공적으로 삭제되었습니다.";
