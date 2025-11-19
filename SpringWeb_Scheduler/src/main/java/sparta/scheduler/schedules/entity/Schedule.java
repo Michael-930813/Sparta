@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import sparta.scheduler.common.BaseEntity;
 import sparta.scheduler.schedules.dto.*;
+import sparta.scheduler.users.entity.User;
 
 @Getter
 @Entity
@@ -14,24 +15,27 @@ public class Schedule extends BaseEntity {
     @Id     // - PK
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
-    private String author;
+
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
     private String description;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
 // - Methods
     // - Constructor
-    public Schedule(String author, String title, String description) {
-        this.author = author;
+    public Schedule(String title, String description, User user) {
         this.title = title;
         this.description = description;
+        this.user = user;
     }
-    public Schedule(CreateScheduleRequest request) {
-        this.author = request.getAuthor();
+    public Schedule(CreateScheduleRequest request, User user) {
         this.title = request.getTitle();
         this.description = request.getDescription();
+        this.user = user;
     }
 
     // - Update

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class GetScheduleResponse {
 // - Properties
     private final Long id;
-    private final String author;
+    private final Long userId;
     private final String title;
     private final String description;
     private final LocalDateTime createdAt;
@@ -17,9 +17,9 @@ public class GetScheduleResponse {
 
 // - Methods
     // - Constructor
-    public GetScheduleResponse(Long id, String author, String title, String description, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public GetScheduleResponse(Long id, Long userId, String title, String description, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
-        this.author = author;
+        this.userId = userId;
         this.title = title;
         this.description = description;
         this.createdAt = createdAt;
@@ -27,7 +27,7 @@ public class GetScheduleResponse {
     }
     public GetScheduleResponse(Schedule schedule) {
         this.id = schedule.getId();
-        this.author = schedule.getAuthor();
+        this.userId = schedule.getUser().getId();
         this.title = schedule.getTitle();
         this.description = schedule.getDescription();
         this.createdAt = schedule.getCreatedAt();

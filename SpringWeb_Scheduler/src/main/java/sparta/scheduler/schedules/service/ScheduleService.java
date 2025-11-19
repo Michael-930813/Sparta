@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import sparta.scheduler.schedules.dto.*;
 import sparta.scheduler.schedules.entity.Schedule;
 import sparta.scheduler.schedules.repository.ScheduleRepository;
+import sparta.scheduler.users.entity.User;
+import sparta.scheduler.users.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,28 +17,23 @@ import java.util.List;
 public class ScheduleService {
 // - Properties
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
-// - Methods
+    // - Methods
     // - Create
     @Transactional
-    public CreateScheduleResponse save(CreateScheduleRequest request) {
-        Schedule schedule = new Schedule(request);
+    public CreateScheduleResponse create(CreateScheduleRequest request) {
+        User user = findUserById(request.getUserId());
+        Schedule schedule = new Schedule(request, user);
         Schedule saved = scheduleRepository.save(schedule);
         return new CreateScheduleResponse(saved);
     }
     // - Read (All & One)
     @Transactional(readOnly = true)
-    public List<GetScheduleResponse> getAll(String author) {
-        List<Schedule> schedules;
-
-        if (author != null && !author.isBlank()) {
-            schedules = scheduleRepository.findAllByAuthorOrderByCreatedAtDesc(author);
-        } else {
-            schedules = scheduleRepository.findAllByOrderByCreatedAtDesc();
-        }
+    public List<GetScheduleResponse> getAll() {
+        List<Schedule> schedules = scheduleRepository.findAllByOrderByCreatedAtDesc();
 
         List<GetScheduleResponse> dtos = new ArrayList<>();
-
         for (Schedule schedule : schedules) {
             dtos.add(new GetScheduleResponse(schedule));
         }
@@ -62,6 +59,12 @@ public class ScheduleService {
         scheduleRepository.delete(schedule);
     }
 
+    // - FindUserFromId
+    public User findUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new IllegalStateException("User with id " + userId + " not found")
+        );
+    }
     // - FindScheduleFromId
     public Schedule findScheduleById(Long scheduleId) {
         return scheduleRepository.findById(scheduleId).orElseThrow(

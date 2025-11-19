@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateScheduleRequest {
 // - Properties
-    private String author;
+    private Long userId;
     private String title;
     private String description;
 }

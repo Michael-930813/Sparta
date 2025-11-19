@@ -18,19 +18,21 @@ public class ScheduleController {
 // - Methods
     // - Create
     @PostMapping("/schedules")
-    public ResponseEntity<CreateScheduleResponse> create(@RequestBody CreateScheduleRequest request) {
-        CreateScheduleResponse result = scheduleService.save(request);
+    public ResponseEntity<CreateScheduleResponse> create(
+            @RequestBody CreateScheduleRequest request) {
+        CreateScheduleResponse result = scheduleService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
     // - Read
     @GetMapping("/schedules")
-    public ResponseEntity<List<GetScheduleResponse>> getAll(@RequestParam(required = false) String author) {
-        List<GetScheduleResponse> result = scheduleService.getAll(author);
+    public ResponseEntity<List<GetScheduleResponse>> getAll() {
+        List<GetScheduleResponse> result = scheduleService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
     @GetMapping("/schedules/{scheduleId}")
-    public ResponseEntity<GetScheduleResponse> getOne(@PathVariable Long Id) {
-        GetScheduleResponse result = scheduleService.getOne(Id);
+    public ResponseEntity<GetScheduleResponse> getOne(
+            @PathVariable Long scheduleId) {
+        GetScheduleResponse result = scheduleService.getOne(scheduleId);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
     // - Update
@@ -43,7 +45,8 @@ public class ScheduleController {
     }
     // - Delete
     @DeleteMapping("/schedules/{scheduleId}")
-    public String delete( @PathVariable Long scheduleId) {
+    public String delete(
+            @PathVariable Long scheduleId) {
         scheduleService.delete(scheduleId);
         return "일정이 성공적으로 삭제되었습니다.";
     }
