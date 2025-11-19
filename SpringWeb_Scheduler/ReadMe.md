@@ -231,7 +231,7 @@ Scheduler Server
 > {
 >   "name": "홍길동(수정)",
 >   "email": "test2@example.com",
->   "password": "1234"  // 본인 확인용 현재 비밀번호
+>   "password": "1234"
 > }
 > ```
 > **\< Response (200 OK) >**
