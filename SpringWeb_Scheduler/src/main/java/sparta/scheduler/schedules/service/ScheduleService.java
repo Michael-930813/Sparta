@@ -30,8 +30,14 @@ public class ScheduleService {
     }
     // - Read (All & One)
     @Transactional(readOnly = true)
-    public List<GetScheduleResponse> getAll() {
-        List<Schedule> schedules = scheduleRepository.findAllByOrderByCreatedAtDesc();
+    public List<GetScheduleResponse> getAll(Long userId) {
+        List<Schedule> schedules;
+
+        if (userId != null && userId > 0) {
+            schedules = scheduleRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
+        } else {
+            schedules = scheduleRepository.findAllByOrderByCreatedAtDesc();
+        }
 
         List<GetScheduleResponse> dtos = new ArrayList<>();
         for (Schedule schedule : schedules) {

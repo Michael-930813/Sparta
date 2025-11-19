@@ -19,7 +19,10 @@ public class UserService {
 // - Methods
     // - Create
     @Transactional
-    public CreateUserResponse save(CreateUserRequest request) {
+    public CreateUserResponse create(CreateUserRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalStateException("이미 가입된 이메일입니다.");
+        }
         User user = new User(request);
         User saved = userRepository.save(user);
         return new CreateUserResponse(saved);
@@ -36,7 +39,6 @@ public class UserService {
         }
 
         List<GetUserResponse> dtos = new ArrayList<>();
-
         for (User user : users) {
             dtos.add(new GetUserResponse(user));
         }
@@ -52,18 +54,24 @@ public class UserService {
     @Transactional
     public UpdateUserResponse update(Long userId, UpdateUserRequest request) {
         User user = findUserById(userId);
+        if (!user.getPassword().equals(request.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
         user.update(request);
         return new UpdateUserResponse(user);
     }
     // - Delete
     @Transactional
-    public void delete(Long userId) {
+    public void delete(Long userId, DeleteUserRequest request) {
         User user = findUserById(userId);
+        if (!user.getPassword().equals(request.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
         userRepository.delete(user);
     }
 
     // - FindUserFromId
-    public User findUserById(Long userId) {
+    private User findUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new IllegalStateException("존재 하지 않는 유저입니다!!")
         );

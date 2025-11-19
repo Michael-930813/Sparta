@@ -19,7 +19,7 @@ public class UserController {
     // - Create
     @PostMapping("/users")
     public ResponseEntity<CreateUserResponse> create(@RequestBody CreateUserRequest request) {
-        CreateUserResponse result = userService.save(request);
+        CreateUserResponse result = userService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
     // - Read
@@ -43,8 +43,10 @@ public class UserController {
     }
     // - Delete
     @DeleteMapping("/users/{userId}")
-    public String delete(@PathVariable Long userId) {
-        userService.delete(userId);
+    public String delete(
+            @PathVariable Long userId,
+            @RequestBody DeleteUserRequest request) {
+        userService.delete(userId, request);
         return "일정이 성공적으로 삭제되었습니다.";
     }
 }

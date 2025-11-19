@@ -25,8 +25,9 @@ public class ScheduleController {
     }
     // - Read
     @GetMapping("/schedules")
-    public ResponseEntity<List<GetScheduleResponse>> getAll() {
-        List<GetScheduleResponse> result = scheduleService.getAll();
+    public ResponseEntity<List<GetScheduleResponse>> getAll(
+            @RequestParam(required = false) Long userId) {
+        List<GetScheduleResponse> result = scheduleService.getAll(userId);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
     @GetMapping("/schedules/{scheduleId}")

@@ -5,9 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CreateUserRequest {
+public class DeleteUserRequest {
 // - Properties
-    private String name;
-    private String email;
     private String password;
 }

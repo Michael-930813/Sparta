@@ -7,6 +7,8 @@ import sparta.scheduler.users.entity.User;
 import java.util.List;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
-    // - Find All, Order By CreatedAt DESC
+    // - Find All By, Order By CreatedAt DESC
     List<Schedule> findAllByOrderByCreatedAtDesc();
+    // - Find All By User, Order By CreatedAt DESC
+    List<Schedule> findAllByUserIdOrderByCreatedAtDesc(Long userId);
 }
