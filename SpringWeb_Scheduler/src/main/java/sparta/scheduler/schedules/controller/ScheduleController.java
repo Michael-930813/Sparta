@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sparta.scheduler.schedules.dto.*;
-import sparta.scheduler.schedules.entity.Schedule;
 import sparta.scheduler.schedules.service.ScheduleService;
 
 import java.util.List;
@@ -44,8 +43,7 @@ public class ScheduleController {
     }
     // - Delete
     @DeleteMapping("/schedules/{scheduleId}")
-    public String delete(
-            @PathVariable Long scheduleId) {
+    public String delete( @PathVariable Long scheduleId) {
         scheduleService.delete(scheduleId);
         return "일정이 성공적으로 삭제되었습니다.";
     }

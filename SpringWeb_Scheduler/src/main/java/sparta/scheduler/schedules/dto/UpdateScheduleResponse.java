@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class UpdateScheduleResponse {
-    // - Properties
+// - Properties
     private final Long id;
     private final String author;
     private final String title;
@@ -15,7 +15,7 @@ public class UpdateScheduleResponse {
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
 
-    // - Methods
+// - Methods
     // - Constructor
     public UpdateScheduleResponse(Long id, String author, String title, String description, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;

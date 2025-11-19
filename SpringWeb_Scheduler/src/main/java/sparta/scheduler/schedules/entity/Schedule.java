@@ -3,8 +3,7 @@ package sparta.scheduler.schedules.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import sparta.scheduler.common.BaseEntity;
-import sparta.scheduler.schedules.dto.CreateScheduleRequest;
-import sparta.scheduler.schedules.dto.UpdateScheduleRequest;
+import sparta.scheduler.schedules.dto.*;
 
 @Getter
 @Entity
