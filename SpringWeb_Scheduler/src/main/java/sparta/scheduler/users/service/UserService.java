@@ -3,6 +3,7 @@ package sparta.scheduler.users.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sparta.scheduler.common.exception.UnauthorizedException;
 import sparta.scheduler.users.dto.*;
 import sparta.scheduler.users.entity.User;
 import sparta.scheduler.users.repository.UserRepository;
@@ -70,6 +71,21 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    // - Login
+    @Transactional
+    public LoginResponse login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
+                () -> new IllegalArgumentException("이메일 또는 비밀번호가 일치하지 않습니다.")
+        );
+
+        if (!user.getPassword().equals(request.getPassword())) {
+            throw new IllegalArgumentException("이메일 또는 비밀번호가 일치하지 않습니다.");
+        }
+
+        return new LoginResponse(user);
+    }
+
+// - Common Methods
     // - FindUserFromId
     private User findUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(

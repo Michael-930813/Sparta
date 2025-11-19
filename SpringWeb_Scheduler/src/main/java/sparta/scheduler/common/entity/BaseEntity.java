@@ -1,4 +1,4 @@
-package sparta.scheduler.common;
+package sparta.scheduler.common.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

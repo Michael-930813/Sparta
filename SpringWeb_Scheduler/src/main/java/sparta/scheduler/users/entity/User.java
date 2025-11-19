@@ -2,7 +2,7 @@ package sparta.scheduler.users.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import sparta.scheduler.common.BaseEntity;
+import sparta.scheduler.common.entity.BaseEntity;
 import sparta.scheduler.users.dto.*;
 
 @Getter

@@ -1,5 +1,7 @@
 package sparta.scheduler.users.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,5 +50,27 @@ public class UserController {
             @RequestBody DeleteUserRequest request) {
         userService.delete(userId, request);
         return "일정이 성공적으로 삭제되었습니다.";
+    }
+
+    // - Login
+    @PostMapping("/users/login")
+    public ResponseEntity<LoginResponse> login(
+            @RequestBody LoginRequest request,
+            HttpServletRequest httpRequest ) {
+        LoginResponse response = userService.login(request);
+
+        HttpSession session = httpRequest.getSession(true);
+        session.setAttribute("userId", response.getUserId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+    // - Logout
+    @PostMapping("/users/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest httpRequest) {
+        HttpSession session = httpRequest.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
