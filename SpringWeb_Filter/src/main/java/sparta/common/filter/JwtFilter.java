@@ -7,11 +7,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import sparta.common.utils.JwtUtil;
 
 import java.io.IOException;
+import java.util.List;
 
 @Order(3)
 @Component
@@ -46,15 +50,21 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String jwt = authorizationHeader.substring(7);
 
+        // - 토큰 유효성 검사
         if (!jwtUtil.validateToken(jwt)) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.getWriter().write("{\"error\": \"Unauthorized\"}");
         }
 
-        // - JWT 토큰 데이터 복호화 후 저장
         String username = jwtUtil.extractUsername(jwt);
 
-        request.setAttribute("username", username);
+        // - JWT 토큰 데이터 복호화 후 저장
+        // - request.setAttribute("username", username); -> Spring Security 방식으로 변경
+
+        // - Spring Security에서 사용하는 User객체 생성
+        User user = new User(username, "", List.of());
+        // - SecurityContextHolder에 저장
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
 
         filterChain.doFilter(request,response);
     }
