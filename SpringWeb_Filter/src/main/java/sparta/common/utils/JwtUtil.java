@@ -15,10 +15,11 @@ import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import sparta.common.enums.UserRoleEnum;
 
 
-@Component
 @Slf4j(topic = "JwtUtil")
+@Component
 public class JwtUtil {
 
     public static final String BEARER_PREFIX = "Bearer ";
@@ -46,10 +47,11 @@ public class JwtUtil {
 
 
     // 토큰 생성
-    public String generateToken(String username) {
+    public String generateToken(String userName, UserRoleEnum userRole) {
         Date now = new Date();
         return BEARER_PREFIX + Jwts.builder()
-                .claim("username", username)
+                .claim("username", userName)
+                .claim("auth", userRole)
                 .issuedAt(now)
                 .expiration(new Date(now.getTime() + TOKEN_TIME))
                 .signWith(key, Jwts.SIG.HS256)
@@ -72,14 +74,15 @@ public class JwtUtil {
 
 
     // 토큰 복호화
-    private Claims extractAllClaims(String token) {
-        return parser.parseSignedClaims(token).getPayload();
-    }
-
-    public String extractUsername(String token) {
-        return extractAllClaims(token).get("username", String.class);
-    }
-
+    // - Token
+    private Claims extractAllClaims(String token)
+    { return parser.parseSignedClaims(token).getPayload(); }
+    // - UserName
+    public String extractUsername(String token)
+    { return extractAllClaims(token).get("username", String.class); }
+    // - UserAuth
+    public String extractRole(String token)
+    { return extractAllClaims(token).get("auth", String.class); }
 
 }
 

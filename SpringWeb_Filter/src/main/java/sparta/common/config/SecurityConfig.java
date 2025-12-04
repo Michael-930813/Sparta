@@ -32,7 +32,10 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtFilter, SecurityContextHolderAwareRequestFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/user/login").permitAll()
+                        .requestMatchers("/api/login").permitAll()
+                        .requestMatchers("/api/user/get").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/normal/**").hasRole("NORMAL")
                         .anyRequest().authenticated())
                 .build();
     }
