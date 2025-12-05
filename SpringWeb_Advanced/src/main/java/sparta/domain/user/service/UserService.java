@@ -1,4 +1,4 @@
-package sparta.user.service;
+package sparta.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,8 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sparta.common.entity.User;
 import sparta.common.utils.JwtUtil;
-import sparta.user.model.request.LoginRequestDto;
-import sparta.user.repository.UserRepository;
+import sparta.domain.user.model.dto.UserDto;
+import sparta.domain.user.model.request.LoginRequestDto;
+import sparta.domain.user.repository.UserRepository;
 
 @Service
 @Slf4j
@@ -39,7 +40,7 @@ public class UserService {
     // - InitData Save
     public User save(User user) { return userRepository.save(user); }
 
-    // -
+    // - Update UserEmail
     @Transactional
     public void updateUserEmail(String username, String email) {
         User user = userRepository.findByUsername(username).orElseThrow(
@@ -47,5 +48,35 @@ public class UserService {
         );
 
         user.updateEmail(email);
+    }
+
+    // - Get User By Username - By JPQL
+    @Transactional
+    public UserDto getUserByUsernameByJpql(String username){
+        User user = userRepository.findByUsernameByJpql(username).orElseThrow(
+                () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
+        );
+
+        return UserDto.from(user);
+    }
+
+    // - Update UserEmail - By JPQL
+    @Transactional
+    public UserDto updateUserEmailByJpql(String username, String email) {
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("등록된 사용자가 없습니다")
+        );
+
+        userRepository.updateUserEmailByJpql(username, email);
+
+        user.updateEmail(email);
+
+        return UserDto.from(user);
+    }
+
+    // - Delete User - By JPQL
+    @Transactional
+    public void deleteUserByJpql(String username) {
+        userRepository.deleteUserByJpql(username);
     }
 }

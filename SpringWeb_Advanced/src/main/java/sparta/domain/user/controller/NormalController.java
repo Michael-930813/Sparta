@@ -1,4 +1,4 @@
-package sparta.user.controller;
+package sparta.domain.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import sparta.user.service.UserService;
+import sparta.domain.user.service.UserService;
 
 import java.io.IOException;
 import java.net.URLDecoder;

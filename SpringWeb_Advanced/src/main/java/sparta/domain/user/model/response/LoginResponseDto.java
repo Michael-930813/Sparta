@@ -1,4 +1,4 @@
-package sparta.user.model.response;
+package sparta.domain.user.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

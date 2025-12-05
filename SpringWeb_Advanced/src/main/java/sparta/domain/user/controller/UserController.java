@@ -1,4 +1,4 @@
-package sparta.user.controller;
+package sparta.domain.user.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -9,10 +9,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import sparta.common.utils.JwtUtil;
-import sparta.user.model.request.LoginRequestDto;
-import sparta.user.model.request.UserEmailUpdateRequestDto;
-import sparta.user.model.response.LoginResponseDto;
-import sparta.user.service.UserService;
+import sparta.domain.user.model.dto.UserDto;
+import sparta.domain.user.model.request.UserEmailUpdateRequestDto;
+import sparta.domain.user.service.UserService;
 
 @RestController
 @RequestMapping("/api/user")
@@ -64,5 +63,25 @@ public class UserController {
             @RequestBody UserEmailUpdateRequestDto dto) {
         userService.updateUserEmail(username, dto.getEmail());
         return "수정 완료.";
+    }
+
+    // - JPQL을 통한 CRUD 실습
+    // - Read
+    @GetMapping("/{username}/jpql")
+    public ResponseEntity<UserDto> getUserByUsernameByJpql(@PathVariable String username) {
+        return ResponseEntity.ok(userService.getUserByUsernameByJpql(username));
+    }
+    // - Update
+    @PutMapping("/{username}/email/jpql")
+    public ResponseEntity<UserDto> updateEmailByJpql(@PathVariable String username, @RequestBody UserEmailUpdateRequestDto dto) {
+        userService.updateUserEmailByJpql(username, dto.getEmail());
+
+        return ResponseEntity.ok(userService.updateUserEmailByJpql(username, dto.getEmail()));
+    }
+    // - Delete
+    @DeleteMapping("/{username}/jpql")
+    public ResponseEntity<String> deleteUserByJpql(@PathVariable String username) {
+        userService.deleteUserByJpql(username);
+        return ResponseEntity.ok("삭제완료");
     }
 }

@@ -16,7 +16,7 @@ public class TimeCheckAop {
     // - What : UserService Methods
     // - When : Method Around
     // - How : Active executionTime Method
-    @Around("execution(* sparta.user.service.UserService.*(..))")
+    @Around("execution(* sparta.domain.user.service.UserService.*(..))")
     public Object executionTime(ProceedingJoinPoint joinPoint) throws  Throwable {
         // - Before Start Method
         long start = System.currentTimeMillis();
