@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class Post {
     private User user;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    @BatchSize(size = 100)
     private List<Comment> comments = new ArrayList<>();
 
     public Post(String content, User user) {

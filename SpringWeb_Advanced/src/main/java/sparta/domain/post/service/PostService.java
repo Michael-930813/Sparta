@@ -48,14 +48,14 @@ public class PostService {
     }
     // - Read - CommentCount
     public List<PostSummaryDto> getPostSummaryListByUsername(String username) {
-        // - Fetch Join Code
-        List<Post> postList = postRepository.findAllWithCommentsByUsername(username);
+//        // - Fetch Join Code
+//        List<Post> postList = postRepository.findAllWithCommentsByUsername(username);
+//
+//        return postList.stream()
+//                .map(post -> new PostSummaryDto(post.getContent(), post.getComments().size()))
+//                .toList();
 
-        return postList.stream()
-                .map(post -> new PostSummaryDto(post.getContent(), post.getComments().size()))
-                .toList();
-
-        // - N + 1 Problem Code
+//        // - N + 1 Problem Code
 //        User user = userRepository.findByUsername(username).orElseThrow(
 //                () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
 //        );
@@ -68,5 +68,18 @@ public class PostService {
 //        }
 //
 //        return result;
+
+        // - BatchSize Code
+//        List<Post> postList = postRepository.findByUserUsername(username);
+//
+//        return postList.stream()
+//                .map(post -> new PostSummaryDto(post.getContent(), post.getComments().size()))
+//                .toList();
+
+
+        // - DTO Projection
+        List<PostSummaryDto> result = postRepository.findAllWithCommentsByUsername(username);
+
+        return result;
     }
 }
