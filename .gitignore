@@ -1,0 +1,68 @@
+### IntelliJ / JetBrains
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+### VS Code / Eclipse (혼용 대비)
+.vscode/
+.classpath
+.project
+.settings/
+
+### OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+### Java / Kotlin (바이너리/크래시)
+*.class
+hs_err_pid*
+replay_pid*
+
+### Build outputs (모노레포 공통)
+build/
+target/
+.gradle/
+.kotlin/
+
+### Java artifacts (일반적으로 커밋하지 않음)
+*.jar
+*.war
+*.ear
+
+### Gradle / Maven Wrapper (예외: 커밋 필요)
+!gradle/wrapper/gradle-wrapper.jar
+!.mvn/wrapper/maven-wrapper.jar
+
+### Logs / temp
+*.log
+*.tmp
+*.err
+*.out
+
+### Front-end / Node
+node_modules/
+dist/
+coverage/
+.cache/
+.temp/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.next/
+.nuxt/
+.svelte-kit/
+.vite/
+
+### Lockfiles (반드시 커밋)
+!package-lock.json
+!yarn.lock
+!pnpm-lock.yaml
+
+### environment
+.env
+.env.*
+!.env.example
