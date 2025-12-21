@@ -15,6 +15,9 @@ import org.example.plus.domain.user.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class InitData {
@@ -25,63 +28,60 @@ public class InitData {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
-
-
     @PostConstruct
     @Transactional
     public void init() {
 
-        User user1 = new User("김동현", passwordEncoder.encode("1234"), "user1@naver.com", UserRoleEnum.ADMIN);
-        User user2 = new User("동현킴", passwordEncoder.encode("1234"), "user2@naver.com", UserRoleEnum.NORMAL);
+        // --- 사용자 데이터 생성 ---
+        User admin = new User("관리자", passwordEncoder.encode("admin123"), "admin@spring.com", UserRoleEnum.ADMIN);
+        User alice = new User("앨리스", passwordEncoder.encode("1234"), "alice@gmail.com", UserRoleEnum.NORMAL);
+        User bob = new User("밥", passwordEncoder.encode("1234"), "bob@naver.com", UserRoleEnum.NORMAL);
+        User charlie = new User("찰리", passwordEncoder.encode("1234"), "charlie@gmail.com", UserRoleEnum.NORMAL);
 
-        userRepository.save(user1);
-        userRepository.save(user2);
+        userRepository.saveAll(List.of(admin, alice, bob, charlie));
 
-        Post post1 = new Post("1번 게시글", user1);
-        Post post2 = new Post("2번 게시글", user1);
-        Post post3 = new Post("2번 게시글", user1);
-        Post post4 = new Post("2번 게시글", user1);
-        Post post5 = new Post("2번 게시글", user1);
-        Post post6 = new Post("2번 게시글", user1);
-        Post post7 = new Post("2번 게시글", user1);
-        Post post8 = new Post("2번 게시글", user1);
-        Post post9 = new Post("2번 게시글", user1);
+        // --- 게시글 데이터 생성 ---
+        List<Post> posts = new ArrayList<>();
 
-        Post post10 = new Post("3번 게시글", user2);
+        // Admin의 공지 게시글
+        posts.add(new Post("공지사항: 서버 점검 안내", admin));
+        posts.add(new Post("스프링 부트 3.x 마이그레이션 가이드", admin));
 
-        postRepository.save(post1);
-        postRepository.save(post2);
-        postRepository.save(post3);
-        postRepository.save(post4);
-        postRepository.save(post5);
-        postRepository.save(post6);
-        postRepository.save(post7);
-        postRepository.save(post8);
-        postRepository.save(post9);
-        postRepository.save(post10);
+        // Alice의 여행 블로그
+        posts.add(new Post("후쿠오카 여행 후기", alice));
+        posts.add(new Post("조호바루 맛집 탐방", alice));
+        posts.add(new Post("싱가포르 출퇴근 일상", alice));
 
-        // 여러분들이 배달음식 시켜먹은 횟수를 구하는 api를 호출했다.
-        // 100번 * N
-        // 100명
-        // 1만번 나간다.
-        //
+        // Bob의 개발 블로그
+        posts.add(new Post("QueryDSL 실무 적용기", bob));
+        posts.add(new Post("JPA 성능 튜닝 방법", bob));
+        posts.add(new Post("Docker로 배포 환경 만들기", bob));
 
+        // Charlie의 리뷰 게시글
+        posts.add(new Post("리제로 3기 감상평", charlie));
+        posts.add(new Post("롤체 시즌10 덱 분석", charlie));
+        posts.add(new Post("카페에서 개발하기 좋은 노트북 추천", charlie));
 
-        Comment comment1 = new Comment("댓글 1번", post1);
-        Comment comment2 = new Comment("댓글 2번", post1);
-        Comment comment3 = new Comment("댓글 3번", post2);
-        Comment comment4 = new Comment("댓글 4번", post2);
-        Comment comment5 = new Comment("댓글 5번", post3);
-        Comment comment6 = new Comment("댓글 6번", post3);
-        Comment comment7 = new Comment("댓글 7번", post3);
+        postRepository.saveAll(posts);
 
-        commentRepository.save(comment1);
-        commentRepository.save(comment2);
-        commentRepository.save(comment3);
-        commentRepository.save(comment4);
-        commentRepository.save(comment5);
-        commentRepository.save(comment6);
-        commentRepository.save(comment7);
+        // --- 댓글 데이터 생성 ---
+        List<Comment> comments = new ArrayList<>();
+
+        // Alice 게시글에 달린 댓글
+        comments.add(new Comment("사진이 너무 예쁘네요!", posts.get(2)));  // 후쿠오카 여행 후기
+        comments.add(new Comment("저도 같은 곳 갔어요!", posts.get(2)));
+        comments.add(new Comment("조호바루 가보고 싶어요", posts.get(3)));
+
+        // Bob 게시글에 달린 댓글
+        comments.add(new Comment("QueryDSL 너무 유용하네요", posts.get(5)));
+        comments.add(new Comment("튜닝 포인트 정리 감사합니다!", posts.get(6)));
+
+        // Charlie 게시글에 달린 댓글
+        comments.add(new Comment("리제로 명작이죠", posts.get(8)));
+        comments.add(new Comment("롤체 요즘 너무 어렵네요", posts.get(9)));
+        comments.add(new Comment("맥북 M3 쓰는데 괜찮아요", posts.get(10)));
+
+        commentRepository.saveAll(comments);
 
     }
 }
