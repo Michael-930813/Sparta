@@ -14,7 +14,7 @@ public class CommentDto {
     private String content;
     private long postId;
 
-    public static CommentDto from(Comment comment) {
-        return new CommentDto(comment.getId(), comment.getContent(), comment.getPost().getId());
+    public static CommentDto from(Comment comment, long postId) {
+        return new CommentDto(comment.getId(), comment.getContent(), postId);
     }
 }

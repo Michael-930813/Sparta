@@ -1,0 +1,14 @@
+package org.example.plus.domain.user.model.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.example.plus.common.enums.UserRoleEnum;
+
+@Getter
+@AllArgsConstructor
+public class UserSearchResponse {
+// - Properties
+    private String username;
+    private String email;
+    private UserRoleEnum role;
+}

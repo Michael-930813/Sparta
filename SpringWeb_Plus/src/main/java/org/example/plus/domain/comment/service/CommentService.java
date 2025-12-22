@@ -22,11 +22,11 @@ public class CommentService {
             () -> new IllegalArgumentException("등록된 Post가 없습니다.")
         );
 
-        Comment comment = new Comment(content, post);
+        Comment comment = new Comment(content, post.getId());
 
         commentRepository.save(comment);
 
-        return CommentDto.from(comment);
+        return CommentDto.from(comment, post.getId());
 
     }
 }

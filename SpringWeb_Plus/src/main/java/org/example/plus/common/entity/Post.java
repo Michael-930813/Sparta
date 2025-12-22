@@ -27,18 +27,10 @@ public class Post {
 
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Long userId;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
-    private List<Comment> comments = new ArrayList<>();
-
-
-    public Post(String content, User user) {
+    public Post(String content, long userId) {
         this.content = content;
-        this.user = user;
+        this.userId = userId;
     }
-
-
 }

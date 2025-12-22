@@ -24,9 +24,9 @@ public class PostService {
             ()-> new IllegalArgumentException("등록된 사용자가 없습니다.")
         );
 
-        Post post = postRepository.save(new Post(content, user));
+        Post post = postRepository.save(new Post(content, user.getId()));
 
-        return PostDto.from(post);
+        return PostDto.from(post, user.getUsername());
 
     }
 
@@ -36,20 +36,17 @@ public class PostService {
 
     // 즉시 로딩으로 한번 테스트를 진행해보겠습니다!
     // 유저를 조회 하자 마자 조회를 할때 연관된 모든 것들을 싸그리 싹싹 긁거서 가져올 것이다.
-
-    public List<PostDto> getPostListByUsername(String username) {
-
+    public List<PostSummaryDto> getPostListByUsername(String username) {
+        // - Find User
         User user = userRepository.findUserByUsername(username).orElseThrow(
             () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
         );
 
-        List<Post> postList = user.getPosts();
+        // - Find PostList
+        List<PostSummaryDto> result = postRepository.finPostSummary(username);
 
-
-        // post List 를 postDto list로 변환 한것이다.
-        return postList.stream()
-            .map(PostDto::from)
-            .collect(Collectors.toList());
+        // - Return
+        return result;
     }
 
     public List<PostSummaryDto> getPostSummaryListByUsername(String username) {

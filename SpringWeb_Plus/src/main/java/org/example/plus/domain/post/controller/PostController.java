@@ -29,7 +29,7 @@ public class PostController {
     }
 
     @GetMapping("/user/{username}")
-    public ResponseEntity<List<PostDto>> getPostListByUsername(@PathVariable String username) {
+    public ResponseEntity<List<PostSummaryDto>> getPostListByUsername(@PathVariable String username) {
         return ResponseEntity.ok(postService.getPostListByUsername(username));
     }
 

@@ -6,7 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.plus.common.utils.JwtUtil;
 import org.example.plus.domain.user.model.dto.UserDto;
 import org.example.plus.domain.user.model.request.UpdateUserEmailRequest;
+import org.example.plus.domain.user.model.request.UserSearchRequest;
+import org.example.plus.domain.user.model.response.UserSearchResponse;
 import org.example.plus.domain.user.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +22,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -90,10 +96,10 @@ public class UserController {
     }
 
     @PutMapping("/{username}/email/jpql")
-    public ResponseEntity<UserDto> updateEmailByJpql(@PathVariable String username, @RequestBody UpdateUserEmailRequest request) {
-
+    public ResponseEntity<UserDto> updateEmailByJpql(
+            @PathVariable String username,
+            @RequestBody UpdateUserEmailRequest request) {
         userService.updateUserEmailByJpql(username, request.getEmail());
-
 
         return ResponseEntity.ok(userService.updateUserEmailByJpql(username, request.getEmail()));
     }
@@ -104,4 +110,19 @@ public class UserController {
         return ResponseEntity.ok("삭제완료");
     }
 
+    // - 테스트용, 일반적인 경우 Get Method 에서는 RequestBody를 사용하지 않는다.
+    @GetMapping("/search")
+    public ResponseEntity<List<UserSearchResponse>> searchUserList(
+            UserSearchRequest request
+    ) {
+        return ResponseEntity.ok(userService.searchUserList(request));
+    }
+
+    @GetMapping("/search/page")
+    public ResponseEntity<Page<UserSearchResponse>> searchUserPage(
+            UserSearchRequest request,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(userService.searchUserPage(request, pageable));
+    }
 }

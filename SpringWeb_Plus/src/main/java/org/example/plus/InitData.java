@@ -44,23 +44,23 @@ public class InitData {
         List<Post> posts = new ArrayList<>();
 
         // Admin의 공지 게시글
-        posts.add(new Post("공지사항: 서버 점검 안내", admin));
-        posts.add(new Post("스프링 부트 3.x 마이그레이션 가이드", admin));
+        posts.add(new Post("공지사항: 서버 점검 안내", admin.getId()));
+        posts.add(new Post("스프링 부트 3.x 마이그레이션 가이드", admin.getId()));
 
         // Alice의 여행 블로그
-        posts.add(new Post("후쿠오카 여행 후기", alice));
-        posts.add(new Post("조호바루 맛집 탐방", alice));
-        posts.add(new Post("싱가포르 출퇴근 일상", alice));
+        posts.add(new Post("후쿠오카 여행 후기", alice.getId()));
+        posts.add(new Post("조호바루 맛집 탐방", alice.getId()));
+        posts.add(new Post("싱가포르 출퇴근 일상", alice.getId()));
 
         // Bob의 개발 블로그
-        posts.add(new Post("QueryDSL 실무 적용기", bob));
-        posts.add(new Post("JPA 성능 튜닝 방법", bob));
-        posts.add(new Post("Docker로 배포 환경 만들기", bob));
+        posts.add(new Post("QueryDSL 실무 적용기", bob.getId()));
+        posts.add(new Post("JPA 성능 튜닝 방법", bob.getId()));
+        posts.add(new Post("Docker로 배포 환경 만들기", bob.getId()));
 
         // Charlie의 리뷰 게시글
-        posts.add(new Post("리제로 3기 감상평", charlie));
-        posts.add(new Post("롤체 시즌10 덱 분석", charlie));
-        posts.add(new Post("카페에서 개발하기 좋은 노트북 추천", charlie));
+        posts.add(new Post("리제로 3기 감상평", charlie.getId()));
+        posts.add(new Post("롤체 시즌10 덱 분석", charlie.getId()));
+        posts.add(new Post("카페에서 개발하기 좋은 노트북 추천", charlie.getId()));
 
         postRepository.saveAll(posts);
 
@@ -68,18 +68,18 @@ public class InitData {
         List<Comment> comments = new ArrayList<>();
 
         // Alice 게시글에 달린 댓글
-        comments.add(new Comment("사진이 너무 예쁘네요!", posts.get(2)));  // 후쿠오카 여행 후기
-        comments.add(new Comment("저도 같은 곳 갔어요!", posts.get(2)));
-        comments.add(new Comment("조호바루 가보고 싶어요", posts.get(3)));
+        comments.add(new Comment("사진이 너무 예쁘네요!", posts.get(2).getId()));  // 후쿠오카 여행 후기
+        comments.add(new Comment("저도 같은 곳 갔어요!", posts.get(2).getId()));
+        comments.add(new Comment("조호바루 가보고 싶어요", posts.get(3).getId()));
 
         // Bob 게시글에 달린 댓글
-        comments.add(new Comment("QueryDSL 너무 유용하네요", posts.get(5)));
-        comments.add(new Comment("튜닝 포인트 정리 감사합니다!", posts.get(6)));
+        comments.add(new Comment("QueryDSL 너무 유용하네요", posts.get(5).getId()));
+        comments.add(new Comment("튜닝 포인트 정리 감사합니다!", posts.get(6).getId()));
 
         // Charlie 게시글에 달린 댓글
-        comments.add(new Comment("리제로 명작이죠", posts.get(8)));
-        comments.add(new Comment("롤체 요즘 너무 어렵네요", posts.get(9)));
-        comments.add(new Comment("맥북 M3 쓰는데 괜찮아요", posts.get(10)));
+        comments.add(new Comment("리제로 명작이죠", posts.get(8).getId()));
+        comments.add(new Comment("롤체 요즘 너무 어렵네요", posts.get(9).getId()));
+        comments.add(new Comment("맥북 M3 쓰는데 괜찮아요", posts.get(10).getId()));
 
         commentRepository.saveAll(comments);
 

@@ -7,9 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface UserRepository extends JpaRepository<User, Long> {
-
-
+public interface UserRepository extends JpaRepository<User, Long>, UserCustomRepository {
+// - Methods
     Optional<User> findUserByUsername(String username);
 
     @Modifying
@@ -19,4 +18,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("DELETE FROM User u WHERE u.username = :username")
     void deleteUserByJpql(@Param("username") String username);
+
+    // - 동적 메소드
 }

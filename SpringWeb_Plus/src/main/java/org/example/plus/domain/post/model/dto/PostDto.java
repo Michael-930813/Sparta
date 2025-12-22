@@ -14,7 +14,7 @@ public class PostDto {
     private String content;
     private String username;
 
-    public static PostDto from(Post post) {
-        return new PostDto(post.getId(), post.getContent(), post.getUser().getUsername());
+    public static PostDto from(Post post, String username) {
+        return new PostDto(post.getId(), post.getContent(), username);
     }
 }
