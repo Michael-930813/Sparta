@@ -1,5 +1,7 @@
 package org.example.plus.domain.post.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +10,10 @@ import org.example.plus.common.entity.Post;
 import org.example.plus.common.entity.User;
 import org.example.plus.domain.post.model.dto.PostDto;
 import org.example.plus.domain.post.model.dto.PostSummaryDto;
+import org.example.plus.domain.post.model.request.UpdatePostRequest;
 import org.example.plus.domain.post.repository.PostRepository;
 import org.example.plus.domain.user.repository.UserRepository;
+import org.hibernate.sql.Update;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +23,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final PostCacheService postCacheService;
 
     public PostDto creatPost(String username, String content) {
 
@@ -32,32 +37,63 @@ public class PostService {
 
     }
 
+    // - Redis Methods
+    public PostDto getPostById(Long postId) {
+        // - If exist cache data -> return cache data
+        PostDto cached = postCacheService.getPostCache(postId);
 
-    // 지연 로딩이구나
-    // 실질적으로 사용할 때 불러오는 것이구나!
+        if (cached != null) {
+            log.info("{} Redis Data Cache Hit", postId);
+            postCacheService.increaseViewCount(postId);
+            return cached;
+        }
 
-    // 즉시 로딩으로 한번 테스트를 진행해보겠습니다!
-    // 유저를 조회 하자 마자 조회를 할때 연관된 모든 것들을 싸그리 싹싹 긁거서 가져올 것이다.
+        // - Or Not, Join DB & Save Cache Data
+        log.info("{} Redis Data Cache Miss", postId);
 
-    public List<PostDto> getPostListByUsername(String username) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post가 없습니다."));
+        // - Increase ViewCount
+        postCacheService.increaseViewCount(postId);
 
- /*       User user = userRepository.findUserByUsername(username).orElseThrow(
-            () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
-        );
+        PostDto dto = PostDto.from(post);
+        postCacheService.savePostCache(postId, dto);
 
-        List<Post> postList = user.getPosts();
+        return dto;
+    }
+    public PostDto updatePostById(Long postId, UpdatePostRequest request) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post가 없습니다."));
 
+        post.update(request);
 
-        // post List 를 postDto list로 변환 한것이다.
-        return postList.stream()
-            .map(PostDto::from)
-            .collect(Collectors.toList());*/
-        return null;
+        postRepository.save(post);
+        postCacheService.deletePostCache(postId);
+
+        return PostDto.from(post);
     }
 
-    public List<PostSummaryDto> getPostSummaryListByUsername(String username) {
+    public List<PostDto> getTopPostList(Integer limit) {
+        List<Long> topPostIdList = postCacheService.getTopPostList(limit);
+        List<PostDto> result = new ArrayList<>();
 
-        List<PostSummaryDto> result = postRepository.findPostSummary(username);
+        if (topPostIdList == null || topPostIdList.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        for (Long postId : topPostIdList) {
+            // - Check Cache Data
+            PostDto dto = postCacheService.getPostCache(postId);
+
+            // - If No Cache Data, Join DB
+            if (dto == null) {
+                dto = PostDto.from(postRepository.findById(postId)
+                        .orElseThrow(() -> new IllegalArgumentException("Post가 없습니다")));
+            }
+
+            result.add(dto);
+        }
+
         return result;
     }
 }

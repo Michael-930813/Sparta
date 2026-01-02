@@ -9,11 +9,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.plus.domain.post.model.request.UpdatePostRequest;
 
 @Entity
 @Getter
@@ -24,9 +27,7 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String content;
-
     private long userId;
 
     public Post(String content, long userId) {
@@ -34,5 +35,7 @@ public class Post {
         this.userId = userId;
     }
 
-
+    public void update(UpdatePostRequest request) {
+        this.content = request.getContent();
+    }
 }
